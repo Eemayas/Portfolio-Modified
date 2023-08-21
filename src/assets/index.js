@@ -24,7 +24,7 @@ import reactjs from "./tech/reactjs.png";
 import tailwind from "./tech/tailwind.png";
 import threejs from "./tech/threejs.svg";
 
-import ProfileAvatar from "./ProfileAvatar.png";
+import ProfileAvatar from "./ProfileAvatar.webp";
 import ProfilePic2 from "./Profilepic2.webp";
 import ProfileIcon from "./ProfileIcon.png";
 

@@ -35,6 +35,9 @@ import Twitter from "./contacts/Twitter.webp";
 import LinkedIn from "./contacts/LinkedIn.webp";
 import Instagram from "./contacts/Instagram.webp";
 
+import  {ReactComponent as EmailIcon} from "./icons/email.svg"
+// import  {ReactComponent as EmailIcon} from "./icons/email.svg"
+
 import CarRaceGameMenu from "./Projects/CarRaceGame/Menu.webp";
 import CarRaceGameGameOver from "./Projects/CarRaceGame/GameOver.webp";
 import CarRaceGameGammingPage from "./Projects/CarRaceGame/GamingPage.webp";
@@ -77,6 +80,8 @@ export {
 
   ProfilePic2,
   ProfileIcon,
+
+  EmailIcon,
 
   CarRaceGameMenu,
   CarRaceGameGameOver,

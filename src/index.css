@@ -26,7 +26,8 @@ code {
   padding: 0;
   box-sizing: border-box;
   font-family: 'Papyrus',"Poppins", sans-serif;
-  /* font-family: , sans-serif; */
+  font-family:"Poppins" , sans-serif;
+  font-display: swap;
   scroll-behavior: smooth;
   color-scheme: dark;
 }

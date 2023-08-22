@@ -3,8 +3,11 @@ import Navbar from "./component/Navbar";
 import Hero from "./component/Hero";
 import About from "./component/About";
 import About2 from "./component/About2";
-// import Experience from "./component/Experience";
 import Tech from "./component/Tech";
+// import Experience from "./component/Experience";
+import Works from "./component/Works";
+// import Feedbacks from "./component/Feedbacks";
+import LetSTalk from "./component/Let'sTalk";import Contact from "./component/Contact";
 const LandingPage = () => { 
   return (
     <div className="relative z-0 bg-primary">
@@ -16,13 +19,12 @@ const LandingPage = () => {
       <About2 />
       {/* <Experience/> */}
       <Tech />
-      {/* <Works /> */}
+      <Works />
       {/* <Feedbacks/> */}
-      {/* <div className="relative z-0 bg-primary"> */}
-        {/* <LetSTalk /> */}
-        {/* <Contact /> */}
-      {/* </div> */}
-      {/* <Project /> */}
+      <div className="relative z-0 bg-primary">
+        <LetSTalk />
+        <Contact />
+      </div>
     </div>
   );
 };

@@ -355,33 +355,6 @@ const contacts = [
     links: "https://www.instagram.com/prashant__manandhar/",
   },
 ];
-// const contacts = [
-//   {
-//     name: "Facebook",
-//     logo: 'fa fa-facebook',
-//     links: "https://www.facebook.com/prashant.manandhar.88/",
-//   },
-//   {
-//     name: "Github",
-//     logo: "fa fa-github",
-//     links: "https://github.com/Eemayas",
-//   },
-//   {
-//     name: "Twitter",
-//     logo: "fa fa-twitter",
-//     links: "https://twitter.com/PrashantManand8",
-//   },
-//   {
-//     name: "LinkedIn",
-//     logo: "fa fa-linkedin",
-//     links: "https://www.linkedin.com/in/prashant-manandhar-461917246/",
-//   },
-//   {
-//     name: "Instagram",
-//     logo: "fa fa-instagram",
-//     links: "https://www.instagram.com/prashant__manandhar/",
-//   },
-// ];
 
 export {
   services,

@@ -1,5 +1,5 @@
 import logo from "./logo-no-background.webp";
-import CommingSoon from "./Commingsoon.png";
+import CommingSoon from "./Commingsoon.webp";
 // import web from "./web.png";
 import web from "./web2.png";
 import github from "./github.png";
@@ -35,13 +35,13 @@ import Twitter from "./contacts/Twitter.webp";
 import LinkedIn from "./contacts/LinkedIn.webp";
 import Instagram from "./contacts/Instagram.webp";
 
-import CarRaceGameMenu from "./Projects/CarRaceGame/Menu.png";
-import CarRaceGameGameOver from "./Projects/CarRaceGame/GameOver.png";
-import CarRaceGameGammingPage from "./Projects/CarRaceGame/GamingPage.png";
-import CarRaceGameInstruction from "./Projects/CarRaceGame/Instruction.png";
-import CarRaceGameLeaderBoard from "./Projects/CarRaceGame/LeaderBoard.png";
-import CarRaceGameLevelSelection from "./Projects/CarRaceGame/LevelSelection.png";
-import CarRaceGameNameEntry from "./Projects/CarRaceGame/NameEntry.png";
+import CarRaceGameMenu from "./Projects/CarRaceGame/Menu.webp";
+import CarRaceGameGameOver from "./Projects/CarRaceGame/GameOver.webp";
+import CarRaceGameGammingPage from "./Projects/CarRaceGame/GamingPage.webp";
+import CarRaceGameInstruction from "./Projects/CarRaceGame/Instruction.webp";
+import CarRaceGameLeaderBoard from "./Projects/CarRaceGame/LeaderBoard.webp";
+import CarRaceGameLevelSelection from "./Projects/CarRaceGame/LevelSelection.webp";
+import CarRaceGameNameEntry from "./Projects/CarRaceGame/NameEntry.webp";
 export {
   ProfileAvatar,
   C,

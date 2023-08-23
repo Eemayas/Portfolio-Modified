@@ -4,7 +4,7 @@ import emailjs from "@emailjs/browser";
 import { styles } from "../style";
 import { SectionWrapper } from "../hoc";
 import { slideIn } from "../utils/motion";
-import { EmailIcon } from "../assets";
+// import { EmailIcon } from "../assets";
 // import { FaMapMarkedAlt,FaPhoneSquare } from "react-icons/fa/index.esm.js";
 // import { RiMailSendLine } from "react-icons/ri/index.esm.js";
 
@@ -14,7 +14,7 @@ const LetsTalk = () => {
     email: "",
     message: "",
   });
-  const formRef = useRef();
+  const  formRef = useRef();
   const [loading, setLoading] = useState(false);
   const handleChange = (e) => {
     const { target } = e;
@@ -117,31 +117,7 @@ const LetsTalk = () => {
             </button>
           </form>
         </motion.div>
-<ContactInfo/>
-        {/* <motion.div
-          variants={slideIn("right", "tween", 0.2, 1)}
-          className="xl:flex-1 xl:flex-col flex gap-5 xs:flex-wrap align-middle  h-auto "
-        >
-          <div className="mb-6 flex items-center flex-col justify-evenly  w-full bg-black-100 md:w-96 p-5 rounded-2xl min-h-[200px] sm:w-[360px]  ">
-            <BsTelephonePlus size={30} /> <h4 className=" m-0">Phone</h4>
-            <hr className="mt-2 mb-2 w-full   bg-white " />
-            <div className="small text-black-50">+9779860440088</div>
-          </div>
-          <div className="md:w-96 mb-6 flex items-center flex-col justify-evenly  w-full bg-black-100 p-5 rounded-2xl min-h-[200px] sm:w-[360px] ">
-            <RiMailSendLine size={30} />
-            <h4 className=" m-0">Email Address</h4>
-            <hr className="mt-2 mb-2 w-full  bg-white " />
-            <div className="small text-black-50">
-              prashantmanandhar2002@gmail.com
-            </div>
-          </div>
-          <div className="md:w-96 mb-6 flex items-center flex-col justify-evenly  w-full bg-black-100 p-5 rounded-2xl min-h-[200px] sm:w-[360px] ">
-            <FaMapMarkedAlt size={30} />
-            <h4 className=" m-0">Address</h4>
-            <hr className="mt-2 mb-2 w-full  bg-white " />
-            <div className="small text-black-50">Banepa 7,Kavre Nepal</div>
-          </div>
-        </motion.div> */}
+        <ContactInfo />
       </div>
     </>
   );
@@ -152,13 +128,13 @@ const ContactInfo = () => (
     className="xl:flex-1 xl:flex-col flex gap-5 xs:flex-wrap align-middle h-auto"
   >
     <ContactCard
-    // icon={<EmailIcon fill="white"/>}
-    // icon={<img src={EmailIcon} className="fill-white" alt="Email"/>}
+      // icon={<EmailIcon fill="white"/>}
+      // icon={<img src={EmailIcon} className="fill-white" alt="Email"/>}
       // icon={<FaPhoneSquare size={30} />}
       title="Phone"
       content="+9779860440088"
     />
-    {/* <ContactCard
+    <ContactCard
       // icon={<RiMailSendLine size={30} />}
       title="Email Address"
       content="prashantmanandhar2002@gmail.com"
@@ -167,7 +143,7 @@ const ContactInfo = () => (
       // icon={<FaMapMarkedAlt size={30} />}
       title="Address"
       content="Banepa 7, Kavre Nepal"
-    /> */}
+    />
   </motion.div>
 );
 const ContactCard = ({ icon, title, content }) => (

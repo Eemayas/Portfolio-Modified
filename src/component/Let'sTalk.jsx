@@ -14,7 +14,7 @@ const LetsTalk = () => {
     email: "",
     message: "",
   });
-  const  formRef = useRef();
+  const formRef = useRef();
   const [loading, setLoading] = useState(false);
   const handleChange = (e) => {
     const { target } = e;
@@ -119,9 +119,11 @@ const LetsTalk = () => {
         </motion.div>
         <ContactInfo />
       </div>
+      <ContactForm />
     </>
   );
 };
+
 const ContactInfo = () => (
   <motion.div
     variants={slideIn("right", "tween", 0.2, 1)}
@@ -154,4 +156,86 @@ const ContactCard = ({ icon, title, content }) => (
     <div className="small text-black-50">{content}</div>
   </div>
 );
+
+const ContactForm = () => {
+  const [form, setForm] = useState({
+    phoneNumber: "",
+    emailAddress: "",
+    address: "",
+  });
+  const formRef = useRef();
+  const [loading, setLoading] = useState(false);
+  const handleSubmit = (e) => {
+    setLoading(true);
+    console.log(form);
+    e.preventDefault();
+    setLoading(false);
+  };
+  return (
+    <>
+      <div
+        className={`mt-12 flex md:w-[80%]  xl:flex-row flex-col gap-10 overflow-hidden`}
+      >
+        <motion.div
+          variants={slideIn("left", "tween", 0.2, 1)}
+          className="flex-[0.75] bg-black-100 p-8 rounded-2xl"
+        >
+          {/* <p className={styles.sectionSubText}>Get in touch</p>
+        <h3 className={styles.sectionHeadText}>Let's Talk.</h3> */}
+
+          <form
+            ref={formRef}
+            onSubmit={handleSubmit}
+            className="mt-12 flex flex-col gap-8"
+          >
+        
+            <label className="flex flex-col">
+              <span className="text-white font-medium mb-4">Phone Number</span>
+              <input
+                type="number"
+                name="name"
+                value={form.phoneNumber}
+                onChange={(e) => setForm({ ...form, phoneNumber: e.target.value })}
+                placeholder="+9779800000000"
+                className="bg-tertiary py-4 px-6 placeholder:text-secondary text-white rounded-lg outline-none border-none font-medium"
+                required
+              />
+            </label>
+            <label className="flex flex-col">
+              <span className="text-white font-medium mb-4">Email Address</span>
+              <input
+                type="email"
+                name="name"
+                value={form.name}
+                onChange={(e) => setForm({ ...form, emailAddress: e.target.value })}
+                placeholder="xyz2002@gmail.coms"
+                className="bg-tertiary py-4 px-6 placeholder:text-secondary text-white rounded-lg outline-none border-none font-medium"
+                required
+              />
+            </label>
+            <label className="flex flex-col">
+              <span className="text-white font-medium mb-4">Address</span>
+              <input
+                type="text"
+                name="name"
+                value={form.name}
+                onChange={(e) => setForm({ ...form, address: e.target.value })}
+                placeholder="Nepal"
+                className="bg-tertiary py-4 px-6 placeholder:text-secondary text-white rounded-lg outline-none border-none font-medium"
+                required
+              />
+            </label>
+
+            <button
+              type="submit"
+              className="bg-tertiary py-3 px-8 rounded-xl outline-none w-fit text-white font-bold shadow-md shadow-primary"
+            >
+              {loading ? "Sending..." : "Send"}
+            </button>
+          </form>
+        </motion.div>
+      </div>
+    </>
+  );
+};
 export default SectionWrapper(LetsTalk);

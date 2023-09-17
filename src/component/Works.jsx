@@ -1,11 +1,12 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import { Tilt } from "react-tilt";
 import { motion } from "framer-motion";
 import { styles } from "../style";
 import { github } from "../assets";
 import { SectionWrapper } from "../hoc";
 import { projects } from "../constants";
-import { fadeIn, textVariant } from "../utils/motion";
+import { fadeIn, slideIn, textVariant } from "../utils/motion";
+import FileBase from "react-file-base64";
 // import { FaArrowRight } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 const ProjectCard = ({
@@ -69,10 +70,10 @@ const ProjectCard = ({
 };
 
 const Works = () => {
-  const navigate=useNavigate();
-  const hanndleNavigatetoProjectCollection=()=>{
-    return navigate("./projectcollection")
-  }
+  const navigate = useNavigate();
+  const hanndleNavigatetoProjectCollection = () => {
+    return navigate("./projectcollection");
+  };
   const projectDescription = `Below are a few selected projects that demonstrate my skills and experience, showcasing real-world examples of my work. Each project is accompanied by a brief description, as well as links to code repositories and live demos. These projects serve as tangible evidence of my ability to tackle intricate challenges, adapt to various technologies, and efficiently handle project management`;
   return (
     <>
@@ -100,12 +101,155 @@ const Works = () => {
         >
           See More Projects
           <div className="flex items-center xs:pt-1 pt-3  ml-3 ">
-          <i className="fa fa-arrow-right text-[18px]"></i>
+            <i className="fa fa-arrow-right text-[18px]"></i>
           </div>
         </button>
       </div>
+      <ProjectForm />
+     
     </>
   );
 };
 
+
+const ProjectForm = () => {
+  const [form, setForm] = useState({
+    name: "",
+    description: "",
+    tags: [],
+    image: "",
+    source_code_link: "",
+    websitelinks: "",
+  });
+  const formRef = useRef();
+  const [loading, setLoading] = useState(false);
+  const handleChange = (e) => {
+    const { target } = e;
+    const { name, value } = target;
+
+    setForm({
+      ...form,
+      [name]: value,
+    });
+  };
+  const handleSubmit = (e) => {
+    console.log(form);
+    e.preventDefault();
+    setLoading(true);
+  };
+  return (
+    <>
+      <div
+        className={`mt-12 flex  xl:flex-row flex-col gap-10 overflow-hidden`}
+      >
+        <motion.div
+          variants={slideIn("left", "tween", 0.2, 1)}
+          className="flex-[0.75] bg-black-100 p-8 rounded-2xl"
+        >
+          <form
+            ref={formRef}
+            onSubmit={handleSubmit}
+            className="mt-12 flex flex-col gap-8"
+          >
+            <label className="flex flex-col">
+              <span className="text-white font-medium mb-4">Project Name</span>
+              <input
+                type="text"
+                name="name"
+                value={form.name}
+                onChange={(e)=>setForm({ ...form, name: e.target.value })}
+                placeholder="Projects Names"
+                className="bg-tertiary py-4 px-6 placeholder:text-secondary text-white rounded-lg outline-none border-none font-medium"
+                required
+              />
+            </label>
+            <label className="flex flex-col">
+              <span className="text-white font-medium mb-4">Project Descripton</span>
+              <textarea
+                rows={7}
+                name="message"
+                value={form.description}
+                onChange={(e)=>setForm({ ...form, description: e.target.value })}
+                placeholder="What you want to say?"
+                className="bg-tertiary py-4 px-6 placeholder:text-secondary text-white rounded-lg outline-none border-none font-medium"
+                required
+              />
+            </label>
+            <label className="flex flex-col">
+              <span className="text-white font-medium mb-4">Project Tags</span>
+              <input
+                type="text"
+                name="name"
+                value={form.tags}
+                onChange={(e) =>
+                  setForm({ ...form, tags: [e.target.value.split(",")] })
+                }
+                placeholder="#flutter,#MongoDB"
+                className="bg-tertiary py-4 px-6 placeholder:text-secondary text-white rounded-lg outline-none border-none font-medium"
+                required
+              />
+            </label>
+            <label className="flex flex-col">
+              <span className="text-white font-medium mb-4">Github Links</span>
+              <input
+                type="url"
+                name="name"
+                value={form.source_code_link}
+                onChange={(e)=>setForm({ ...form, source_code_link: e.target.value })}
+                placeholder="https://github.com/"
+                className="bg-tertiary py-4 px-6 placeholder:text-secondary text-white rounded-lg outline-none border-none font-medium"
+                required
+              />
+            </label>
+             <label className="flex flex-col">
+              <span className="text-white font-medium mb-4">Website Links</span>
+              <input
+                type="url"
+                name="name"
+                value={form.websitelinks}
+                onChange={(e)=>setForm({ ...form, websitelinks: e.target.value })}
+                placeholder="https://www.manandharprashant.com.np/"
+                className="bg-tertiary py-4 px-6 placeholder:text-secondary text-white rounded-lg outline-none border-none font-medium"
+           
+              />
+            </label>
+            <label className="flex flex-col">
+              <span className="text-white font-medium mb-4">
+                Select an Image
+              </span>
+              <div className="cursor-pointer bg-tertiary py-4 px-6 placeholder:text-secondary text-white rounded-lg outline-none border-none font-medium hover:bg-blue-600 transition duration-300">
+                <FileBase
+                  type="file"
+                  multiple={false}
+                  onDone={({ base64 }) =>
+                  setForm({ ...form, image: base64 })
+                  }
+                />
+              </div>
+            </label>
+
+            {form.image && (
+              <div className="mt-4">
+                <span className="text-white font-medium mb-4">
+                  Selected Image:
+                </span>
+                <img
+                  src={form.image}
+                  alt="Selected"
+                  className="w-40 h-40 mt-2 rounded-[40px] border-4 border-red-500"
+                />
+              </div>
+            )}
+            <button
+              type="submit"
+              className="bg-tertiary py-3 px-8 rounded-xl outline-none w-fit text-white font-bold shadow-md shadow-primary"
+            >
+              {loading ? "Sending..." : "Send"}
+            </button>
+          </form>
+        </motion.div>
+      </div>
+    </>
+  );
+};
 export default SectionWrapper(Works, "project");

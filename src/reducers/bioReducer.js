@@ -9,6 +9,10 @@ const initialState = {
         return action.payload ;
       case POST_BIO_SUCCESS:
         return [...state, action.payload]
+      case PATCH_BIO_SUCCESS:
+        return state.map((bio) =>
+        bio._id === action.payload._id ? action.payload : bio
+      );
       default:
         return state;
     }

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { styles } from "../style";
 import { C, ProfilePic2 } from "../assets";
@@ -7,35 +7,21 @@ import { SectionWrapper } from "../hoc";
 import { Avatar } from "@mui/material";
 import FileBase from "react-file-base64";
 import { useDispatch } from "react-redux";
-import { postBio } from "../action/dataAction";
+import { fetchBio, patchBio, postBio } from "../action/dataAction";
 import { useSelector } from "react-redux";
-// import {
-//   CardMedia,
-// } from "@material-ui/core/";
-// import {  CircularProgress } from '@material-ui/core';
-const ProfileAvatars = (imgsrc) => {
-  // Assuming your base64 data URL is stored in a variable called 'base64DataUrl'
-// const base64Data = imgsrc.split(',')[1];
-// const blob = new Blob([atob(base64Data)], { type: 'image/png' });
-// const imageUrl = URL.createObjectURL(blob);
+import { CircularProgress } from "@material-ui/core";
 
+
+const ProfileAvatars = (imgsrc) => {
+  // console.log(imgsrc.imgsrc)
   return (
     <div className="w-full h-60  flex justify-center items-center md:h-80 md:w-80">
       <div className="w-60 relative flex justify-center items-center md:w-full h-full">
-        
-      {/* <CardMedia
-        className={classes.media}
-        image={
-          post.selectedFile ||
-          "https://user-images.githubusercontent.com/194400/49531010-48dad180-f8b1-11e8-8d89-1e61320e1d82.png"
-        }
-        title={post.title} */}
-      {/* /> */}
-      <Avatar
+        <Avatar
           style={{ height: "80%", width: "80%" }}
           className=" border-4 border-transparent animate-circle-rotate"
           // src={ProfilePic2}
-          // src={imageUrl}
+          src={imgsrc.imgsrc}
           alt={"profile Pic"}
         />
         <div className="absolute w-full h-full border-t-4 border-b-4 border-t-lime-500 border-b-blue-500 border-opacity-50 rounded-full animate-spin-right"></div>
@@ -45,8 +31,15 @@ const ProfileAvatars = (imgsrc) => {
   );
 };
 const About = () => {
-  const bios = useSelector((state) => state.BioReducer);
-  console.log(bios);
+  const [currentId, setCurrentId] = useState(0);
+  const dispatch = useDispatch();
+
+  // useEffect(() => {
+  //   dispatch(fetchBio());
+  // }, [currentId, dispatch]);
+
+   const bios = useSelector((state) => state.BioReducer);
+  // console.log(bios);
   const isAdmin = true;
   const Bio = `"Hello there! I am a highly skilled computer engineering professional with expertise in various programming languages such as C, C++, Flutter, Dart, React, HTML, CSS, and JavaScript. I am a quick learner and always eager to take on new challenges that help me further expand my skillset. In my free time, I love to indulge in my hobbies of cycling and reading novels and comics. My passion for technology and innovation drives me to continuously learn and stay up-to-date with the latest trends in the industry. With my strong work ethic and exceptional problem-solving skills, I am confident in my ability to contribute to any project I am a part of. Thank you for taking the time to read my bio, and I look forward to potentially working with you!"`;
   return (
@@ -56,24 +49,26 @@ const About = () => {
         <h2 className={styles.sectionHeadText}>Overview</h2>
       </motion.div>
       <div className="md:flex-row flex flex-col-reverse justify-around">
-        
         <motion.p
           className="md:w-[50%] mt-4 w-[100%] text-justify text-secondary text-[17px]  leading-[30px]"
           variants={fadeIn("", "", 0.1, 1)}
-        >{!bios.length ? <p>Loading</p> : bios[0].bio}
+        >
+          {!bios.length ? <CircularProgress /> : bios[0].bio}
           {/* {Bio} */}
         </motion.p>
-        {
-          !bios.length ?<p></p>:<ProfileAvatars imgsrc={bios[0].selectedImage} />
-        }
-        
+        {!bios.length ? (
+          <p></p>
+        ) : (
+          <ProfileAvatars imgsrc={bios[0].selectedImage} />
+        )}
       </div>
-      {isAdmin ? <Form /> : <idv></idv>}
+      {isAdmin ? <Form formI={bios} setCurrentId={setCurrentId}/> : <div></div>}
     </>
   );
 };
 
-const Form = () => {
+const Form = ({ formI ,setCurrentId}) => {
+  // console.log(formI);
   const dispatch = useDispatch();
   const [form, setForm] = useState({
     bio: "",
@@ -85,9 +80,25 @@ const Form = () => {
     setLoading(true);
     console.log(form);
     e.preventDefault();
-    dispatch(postBio(form));
+    if(formI==0)
+    {
+      dispatch(postBio(form));
+      setCurrentId(90);
+    }else{
+      dispatch(patchBio(formI[0]._id,form));
+      setCurrentId(formI[0]._id);
+    }
+    
     setLoading(false);
   };
+  useEffect(() => {
+    if (formI.length != 0) {
+      setForm({
+        bio: formI[0].bio,
+        selectedImage: formI[0].selectedImage,
+      });
+    }
+  }, [formI]);
   return (
     <>
       <div

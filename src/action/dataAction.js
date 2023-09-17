@@ -15,7 +15,7 @@ export const fetchBio = () => {
   return async (dispatch) => {
     try {
       const response = await api.fetchBio(); // Replace with your API endpoint
-      console.log(response);
+      // console.log(response);
       dispatch({ type: FETCH_BIO_SUCCESS, payload: response.data });
     } catch (error) {
         console.error("fetchBio(action)\n"+error.message)
@@ -25,9 +25,9 @@ export const fetchBio = () => {
 export const postBio = (newBio) => {
   return async (dispatch) => {
     try {
-      console.log(newBio);
+      // console.log(newBio);
       const response = await api.postBio(newBio);
-      console.log(response);
+      // console.log(response);
       dispatch({ type: POST_BIO_SUCCESS, payload: response.data });
     } catch (error) {
       console.error("postBio(action)\n" + error.message);
@@ -35,6 +35,20 @@ export const postBio = (newBio) => {
     }
   };
 };
+export const patchBio = (id,updatedBio) => {
+  return async (dispatch) => {
+    try {
+      console.log(updatedBio);
+      const response = await api.patchBio(id,updatedBio);
+      console.log(response);
+      dispatch({ type: PATCH_BIO_SUCCESS, payload: response.data });
+    } catch (error) {
+      console.error("patchBio(action)\n" + error.message);
+      
+    }
+  };
+};
+
 
 export const fetchBioCard = () => {
   return async (dispatch) => {
@@ -47,6 +61,21 @@ export const fetchBioCard = () => {
     }
   };
 };
+export const postBioCard = (newBioCard) => {
+  return async (dispatch) => {
+    try {
+      console.log(newBioCard);
+      const response = await api.postBio(newBioCard);
+      // console.log(response);
+      dispatch({ type: POST_BIOCARD_SUCCESS, payload: response.data });
+    } catch (error) {
+      console.error("postBioCard(action)\n" + error.message);
+      
+    }
+  };
+};
+
+
 export const fetchBioSkill = () => {
   return async (dispatch) => {
     try {

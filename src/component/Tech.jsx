@@ -89,12 +89,12 @@ const Tech = () => {
       ) : (
         <CircularProgress />
       )}
-      <TechForm id={id} form={form} setForm={setForm} />
+      <TechForm setId={setId} id={id} form={form} setForm={setForm} />
     </>
   );
 };
 
-const TechForm = ({ id, form, setForm }) => {
+const TechForm = ({setId, id, form, setForm }) => {
   const dispatch = useDispatch();
 // console.log(id);
   const formRef = useRef();
@@ -108,7 +108,11 @@ const TechForm = ({ id, form, setForm }) => {
     }else{
     dispatch(postBioSkill(form));
     }
-
+    setId("0");
+    setForm({
+      title: "",
+      selectedImage: "",
+      })
     setLoading(false);
   };
   return (

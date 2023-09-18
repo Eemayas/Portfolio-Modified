@@ -4,9 +4,6 @@ import {
   PATCH_BIOCARD_SUCCESS,
   DELETE_BIOCARD_SUCCESS,
 } from "../constant";
-const initialState = {
-  data: [],
-};
 
 const BioCardReducer = (state = [], action) => {
   switch (action.type) {

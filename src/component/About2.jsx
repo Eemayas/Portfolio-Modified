@@ -92,12 +92,12 @@ const About2 = () => {
           <CircularProgress />
         )}
       </div>
-      <About2Form id={id} form={form} setForm={setForm} />
+      <About2Form setId={setId} id={id} form={form} setForm={setForm} />
     </>
   );
 };
 
-const About2Form = ({ id, form, setForm }) => {
+const About2Form = ({setId, id, form, setForm }) => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   // const [form, setForm] = useState({
@@ -115,7 +115,11 @@ const About2Form = ({ id, form, setForm }) => {
     }else{
       dispatch(postBioCard(form));
     }
-    
+    setId("0");
+    setForm({
+        title: "",
+        selectedImage: "",
+      })
     setLoading(false);
   };
   return (

@@ -6,7 +6,8 @@ import ProjectSlider from './component/ProjectSlider';
 import { useDispatch } from 'react-redux';
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { fetchBio, fetchBioCard, fetchBioSkill, fetchContact, fetchData, fetchExperience, fetchProject, fetchSocialMedia, fetchTestimonial } from './action/dataAction.js';
+import { fetchBio, fetchBioCard, fetchBioSkill, fetchContact, fetchData, fetchExperience, fetchProject, fetchTestimonial } from './action/dataAction.js';
+import { fetchSocialMedia } from './action/socialMediaAction';
 
 function App() {
   const dispatch = useDispatch();

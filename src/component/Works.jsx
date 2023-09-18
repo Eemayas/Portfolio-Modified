@@ -194,14 +194,13 @@ const Works = () => {
     source_code_link: "",
     websitelinks: "",
   });
-  const dispatch=useDispatch()
   const [id, setId] = useState("0");
   const navigate = useNavigate();
   const hanndleNavigatetoProjectCollection = () => {
     return navigate("./projectcollection");
   };
   const projectss = useSelector((state) => state.ProjectReducer);
-  console.log(projectss);
+  // console.log(projectss);
   const projectDescription = `Below are a few selected projects that demonstrate my skills and experience, showcasing real-world examples of my work. Each project is accompanied by a brief description, as well as links to code repositories and live demos. These projects serve as tangible evidence of my ability to tackle intricate challenges, adapt to various technologies, and efficiently handle project management`;
   return (
     <>
@@ -232,29 +231,12 @@ const Works = () => {
       ) : (
         <CircularProgress />
       )}
-
-      {/* <div className=" mt-20 flex flex-wrap justify-center gap-7">
-        {projects.map((project, index) => (
-          <ProjectCard key={`project-${index}`} setForm={setForm} setId={ setId} index={index} {...project} />
-        ))}
-      </div> */}
-      {/* <div className="flex justify-normal  xs:justify-end">
-        <button
-          onClick={hanndleNavigatetoProjectCollection}
-          className="bg-tertiary flex justify-end mt-5 py-3 px-8 rounded-xl outline-none w-fit text-white font-bold shadow-md shadow-slate-500"
-        >
-          See More Projects
-          <div className="flex items-center xs:pt-1 pt-3  ml-3 ">
-            <i className="fa fa-arrow-right text-[18px]"></i>
-          </div>
-        </button>
-      </div> */}
-      <ProjectForm form={form} setForm={setForm} id={id} />
+      <ProjectForm setId={setId} form={form} setForm={setForm} id={id} />
     </>
   );
 };
 
-const ProjectForm = ({ form, setForm, id }) => {
+const ProjectForm = ({setId, form, setForm, id }) => {
   const dispatch = useDispatch();
   const formRef = useRef();
   const [loading, setLoading] = useState(false);
@@ -267,7 +249,15 @@ const ProjectForm = ({ form, setForm, id }) => {
     } else {
       dispatch(postProject(form));
     }
-
+    setId("0");
+    setForm({
+      name: "",
+      description: "",
+      tags: [],
+      image: "",
+      source_code_link: "",
+      websitelinks: "",
+      })
     setLoading(false);
   };
   return (

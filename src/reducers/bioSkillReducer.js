@@ -5,11 +5,10 @@ import {
   DELETE_BIOSKILL_SUCCESS,
 } from "../constant";
 
-
 const BioSkillReducer = (state = [], action) => {
   switch (action.type) {
     case FETCH_BIOSKILL_SUCCESS:
-      console.log(state, action);
+      // console.log(state, action);
       return action.payload;
     case POST_BIOSKILL_SUCCESS:
       return [...state, action.payload];

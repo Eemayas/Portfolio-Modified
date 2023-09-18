@@ -4,16 +4,23 @@ import emailjs from "@emailjs/browser";
 import { styles } from "../style";
 import { SectionWrapper } from "../hoc";
 import { slideIn } from "../utils/motion";
+import { postContact, deleteContact, patchContact } from "../action/dataAction";
+import { useDispatch, useSelector } from "react-redux";
+import { CircularProgress } from "@material-ui/core";
+import { EditIcon, DeleteIcons } from "../assets";
+
 // import { EmailIcon } from "../assets";
 // import { FaMapMarkedAlt,FaPhoneSquare } from "react-icons/fa/index.esm.js";
 // import { RiMailSendLine } from "react-icons/ri/index.esm.js";
 
 const LetsTalk = () => {
   const [form, setForm] = useState({
-    name: "",
-    email: "",
-    message: "",
+    title: "",
+    detail: "",
   });
+  const [id, setId] = useState("0");
+  const contacts = useSelector((state) => state.ContactReducer);
+  // console.log(contacts);
   const formRef = useRef();
   const [loading, setLoading] = useState(false);
   const handleChange = (e) => {
@@ -58,7 +65,7 @@ const LetsTalk = () => {
   return (
     <>
       <div
-        className={`xl:mt-12 flex  xl:flex-row flex-col gap-10 overflow-hidden`}
+        className={`xl:mt-12 flex md:flex-row flex-col gap-10 overflow-hidden`}
       >
         <motion.div
           variants={slideIn("left", "tween", 0.2, 1)}
@@ -117,58 +124,93 @@ const LetsTalk = () => {
             </button>
           </form>
         </motion.div>
-        <ContactInfo />
+        <ContactInfo contacts={contacts} setForm={setForm} setId={setId} />
       </div>
-      <ContactForm />
+      <ContactForm setId={setId} form={form} setForm={setForm} id={id} />
     </>
   );
 };
 
-const ContactInfo = () => (
-  <motion.div
-    variants={slideIn("right", "tween", 0.2, 1)}
-    className="xl:flex-1 xl:flex-col flex gap-5 xs:flex-wrap align-middle h-auto"
-  >
-    <ContactCard
-      // icon={<EmailIcon fill="white"/>}
-      // icon={<img src={EmailIcon} className="fill-white" alt="Email"/>}
-      // icon={<FaPhoneSquare size={30} />}
-      title="Phone"
-      content="+9779860440088"
-    />
-    <ContactCard
-      // icon={<RiMailSendLine size={30} />}
-      title="Email Address"
-      content="prashantmanandhar2002@gmail.com"
-    />
-    <ContactCard
-      // icon={<FaMapMarkedAlt size={30} />}
-      title="Address"
-      content="Banepa 7, Kavre Nepal"
-    />
-  </motion.div>
-);
-const ContactCard = ({ icon, title, content }) => (
-  <div className="md:w-96 mb-6 flex items-center flex-col justify-evenly w-full bg-black-100 p-5 rounded-2xl min-h-[200px] sm:w-[360px]">
-    {icon}
-    <h4 className="m-0">{title}</h4>
-    <hr className="mt-2 mb-2 w-full bg-white" />
-    <div className="small text-black-50">{content}</div>
-  </div>
-);
+const ContactInfo = ({ contacts, setForm, setId }) => {
+  // console.log(contacts.length);
+  return contacts.length ? (
+    <motion.div
+      variants={slideIn("right", "tween", 0.2, 1)}
+      className="xs:flex-1 xs:mt-5 flex-col flex gap-5 xs:flex-wrap align-middle h-auto"
+    >
+      {contacts.map((contact, index) => (
+        <ContactCard
+          key={`contact-${index}`}
+          setForm={setForm}
+          setId={setId}
+          index={index}
+          {...contact}
+          // id={contact._id}
+        />
+      ))}
+    </motion.div>
+  ) : (
+    <CircularProgress />
+  );
+};
 
-const ContactForm = () => {
-  const [form, setForm] = useState({
-    phoneNumber: "",
-    emailAddress: "",
-    address: "",
-  });
+const ContactCard = ({ _id, setId, setForm, icon, title, detail }) => {
+  const dispatch = useDispatch();
+  return (
+    <div className="flex flex-row items-center gap-3 ">
+      <div className="md:w-96 mb-6 flex items-center flex-col justify-evenly w-full bg-black-100 p-5 rounded-2xl min-h-[200px] sm:w-[360px]">
+        {/* {icon} */}
+        <h4 className="m-0">{title}</h4>
+        <hr className="mt-2 mb-2 w-full bg-white" />
+        <div className="small text-black-50">{detail}</div>
+      </div>
+      <div className="flex  flex-col justify-normal  xs:justify-end">
+        <button
+          onClick={() => {
+            setId(_id);
+            setForm({
+              title: title,
+              detail: detail,
+            });
+          }}
+          className="bg-tertiary flex justify-end mt-2 py-3 px-5 rounded-xl outline-none w-fit text-white font-bold shadow-md shadow-slate-500"
+        >
+          <img src={EditIcon} className="h-[20px]" alt="Edit Icon" />
+        </button>
+        <button
+          onClick={() => {
+            dispatch(deleteContact(_id));
+          }}
+          className="bg-tertiary flex justify-end mt-2 py-3 px-5 rounded-xl outline-none w-fit text-white font-bold shadow-md shadow-slate-500"
+        >
+          <img className="h-[20px]" src={DeleteIcons} />
+        </button>
+      </div>
+    </div>
+  );
+};
+
+const ContactForm = ({ setId, setForm, id, form }) => {
+  const dispatch = useDispatch();
+
   const formRef = useRef();
   const [loading, setLoading] = useState(false);
   const handleSubmit = (e) => {
     setLoading(true);
     console.log(form);
     e.preventDefault();
+
+    if (id != "0") {
+      dispatch(patchContact(id, form));
+    } else {
+      dispatch(postContact(form));
+    }
+    setId("0");
+    setForm({
+      title: "",
+      detail: "",
+      })
+
     setLoading(false);
   };
   return (
@@ -188,39 +230,26 @@ const ContactForm = () => {
             onSubmit={handleSubmit}
             className="mt-12 flex flex-col gap-8"
           >
-        
             <label className="flex flex-col">
-              <span className="text-white font-medium mb-4">Phone Number</span>
-              <input
-                type="number"
-                name="name"
-                value={form.phoneNumber}
-                onChange={(e) => setForm({ ...form, phoneNumber: e.target.value })}
-                placeholder="+9779800000000"
-                className="bg-tertiary py-4 px-6 placeholder:text-secondary text-white rounded-lg outline-none border-none font-medium"
-                required
-              />
-            </label>
-            <label className="flex flex-col">
-              <span className="text-white font-medium mb-4">Email Address</span>
-              <input
-                type="email"
-                name="name"
-                value={form.name}
-                onChange={(e) => setForm({ ...form, emailAddress: e.target.value })}
-                placeholder="xyz2002@gmail.coms"
-                className="bg-tertiary py-4 px-6 placeholder:text-secondary text-white rounded-lg outline-none border-none font-medium"
-                required
-              />
-            </label>
-            <label className="flex flex-col">
-              <span className="text-white font-medium mb-4">Address</span>
+              <span className="text-white font-medium mb-4">Title</span>
               <input
                 type="text"
                 name="name"
-                value={form.name}
-                onChange={(e) => setForm({ ...form, address: e.target.value })}
-                placeholder="Nepal"
+                value={form.title}
+                onChange={(e) => setForm({ ...form, title: e.target.value })}
+                placeholder="Phone  Number/Email Address"
+                className="bg-tertiary py-4 px-6 placeholder:text-secondary text-white rounded-lg outline-none border-none font-medium"
+                required
+              />
+            </label>
+            <label className="flex flex-col">
+              <span className="text-white font-medium mb-4">Detail</span>
+              <input
+                type="text"
+                name="name"
+                value={form.detail}
+                onChange={(e) => setForm({ ...form, detail: e.target.value })}
+                placeholder="..."
                 className="bg-tertiary py-4 px-6 placeholder:text-secondary text-white rounded-lg outline-none border-none font-medium"
                 required
               />

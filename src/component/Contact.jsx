@@ -1,77 +1,125 @@
 import React, { useRef, useState } from "react";
 import { SectionWrapper } from "../hoc";
 import { motion } from "framer-motion";
-import { fadeIn,slideIn, textVariant } from "../utils/motion";
+import { fadeIn, slideIn, textVariant } from "../utils/motion";
 import { styles } from "../style";
 import { Tilt } from "react-tilt";
 import { contacts } from "../constants";
 import FileBase from "react-file-base64";
+import { useDispatch, useSelector } from "react-redux";
+import { CircularProgress } from "@material-ui/core";
+import { EditIcon, DeleteIcons } from "../assets";
+
+import { deleteSocialMedia, patchSocialMedia, postSocialMedia } from "../action/socialMediaAction";
 const Contact = () => {
+  const [form, setForm] = useState({
+    name: "",
+    logo: "",
+    links: "",
+  });
+  const [id, setId] = useState("0");
+  const socialMedias = useSelector((state) => state.SocialMediaReducer);
+  // console.log(socialMedias);
   return (
-    <><div className="bg-black-100 rounded-2xl">
-      <div className="p-8">
-        <motion.div variants={textVariant()}>
-          <p className={styles.sectionSubText}>Get In Touch.</p>
-          <h2 className={styles.sectionHeadText}>Contacts</h2>
-        </motion.div>
+    <>
+      <div className="bg-black-100 rounded-2xl">
+        <div className="p-8">
+          <motion.div variants={textVariant()}>
+            <p className={styles.sectionSubText}>Get In Touch.</p>
+            <h2 className={styles.sectionHeadText}>Contacts</h2>
+          </motion.div>
+        </div>
+        {socialMedias.length ? (
+          <div className="flex flex-row flex-wrap justify-center gap-10 pb-10">
+            {socialMedias.map((socialMedia, index) => (
+              <ContactCard
+              setForm={setForm}
+              setId={setId}
+                index={index}
+                key={`socialMedia-${index}`}
+                name={socialMedia.name}
+                links={socialMedia.links}
+                logo={socialMedia.logo}
+                _id={socialMedia._id}
+              />
+            ))}
+          </div>
+        ) : (
+          <CircularProgress />
+        )}
       </div>
-      <div className="flex flex-row flex-wrap justify-center gap-10 pb-10">
-        {contacts.map((contact, index) => (
-          <ContactCard
-            index={index}
-            key={`contacts-${index}`}
-            name={contact.name}
-            links={contact.links}
-            logo={contact.logo}
-          />
-        ))}
-      </div>
-    </div>
-    <SocialMediaForm/>
+      <SocialMediaForm setId={setId} form={form} setForm={setForm} id={id} />
     </>
-    
   );
 };
 
-const ContactCard = ({ index, name, links, logo }) => {
-  return (
+const ContactCard = ({ index, name, links, logo, _id, setForm, setId }) => {
+  const dispatch = useDispatch(); return (
     <Tilt className="xs:w-[110px] w-[110px] ">
-      <motion.div
-        className="w-full green-pink-gradient p-[1px] rounded-[30px] shadow-card "
-        variants={fadeIn("right", "spring", 0.25 * index, 0.55)}
-      >
-        <div
-          className="bg-tertiary rounded-[30px] "
-          onClick={() => window.open(links, "_blank")}
-        >
-          <img
-            loading="lazy"
-            src={logo}
-            alt={name}
-            className="w-full h-full object-contain py-5 px-5"
-          ></img>
+      <motion.div variants={fadeIn("right", "spring", 0.25 * index, 0.55)}>
+        <div className="w-full green-pink-gradient p-[1px] rounded-[30px] shadow-card ">
+          <div
+            className="bg-tertiary rounded-[30px] "
+            onClick={() => window.open(links, "_blank")}
+          >
+            <img
+              loading="lazy"
+              src={logo}
+              alt={name}
+              className="w-full h-full object-contain py-5 px-5"
+            ></img>
 
-          <div className=" pb-2 truncate  w-full text-secondary font-quicksand flex flex-col items-center justify-center">
-            {name}
+            <div className=" pb-2 truncate  w-full text-secondary font-quicksand flex flex-col items-center justify-center">
+              {name}
+            </div>
           </div>
+        </div>
+        <div className="flex items-end flex-col justify-normal  xs:justify-end">
+          <button
+            onClick={() => {
+              setId(_id);
+              setForm({ name:name,
+              logo: logo,
+              links: links, });
+            }}
+            className="bg-tertiary flex justify-end mt-2 py-3 px-5 rounded-xl outline-none w-fit text-white font-bold shadow-md shadow-slate-500"
+          >
+            <img src={EditIcon} className="h-[20px]" alt="Edit Icon" />
+          </button>
+          <button
+            onClick={() => {
+              dispatch(deleteSocialMedia(_id));
+            }}
+            className="bg-tertiary flex justify-end mt-2 py-3 px-5 rounded-xl outline-none w-fit text-white font-bold shadow-md shadow-slate-500"
+          >
+            <img className="h-[20px]" src={DeleteIcons} />
+          </button>
         </div>
       </motion.div>
     </Tilt>
   );
 };
 
-const SocialMediaForm = () => {
-  const [form, setForm] = useState({
-    name: "",
-    logo: "",
-    links: "",
-  });
+const SocialMediaForm = ({setId, form, setForm, id }) => {
+  const dispatch = useDispatch();
   const formRef = useRef();
   const [loading, setLoading] = useState(false);
   const handleSubmit = (e) => {
     setLoading(true);
     console.log(form);
     e.preventDefault();
+
+    if (id != "0") {
+      dispatch(patchSocialMedia(id, form));
+    } else {
+      dispatch(postSocialMedia(form));
+    }
+    setId("0");
+    setForm({
+        title: "",
+        selectedImage: "",
+      })
+
     setLoading(false);
   };
   return (
@@ -91,7 +139,6 @@ const SocialMediaForm = () => {
             onSubmit={handleSubmit}
             className="mt-12 flex flex-col gap-8"
           >
-        
             <label className="flex flex-col">
               <span className="text-white font-medium mb-4">Name</span>
               <input
@@ -124,9 +171,7 @@ const SocialMediaForm = () => {
                 <FileBase
                   type="file"
                   multiple={false}
-                  onDone={({ base64 }) =>
-                  setForm({ ...form, logo: base64 })
-                  }
+                  onDone={({ base64 }) => setForm({ ...form, logo: base64 })}
                 />
               </div>
             </label>
@@ -157,6 +202,5 @@ const SocialMediaForm = () => {
     </>
   );
 };
-
 
 export default SectionWrapper(Contact, "contact");

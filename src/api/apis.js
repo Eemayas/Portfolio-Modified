@@ -31,5 +31,11 @@ export const deleteContact = (id) => axios.delete(`${url}/contact/${id}`);
 
 
 export const fetchSocialMedia = () => axios.get(`${url}/socialMedia`);
+export const postSocialMedia = (newSocialMedia) => axios.post(`${url}/socialMedia`,newSocialMedia);
+export const patchSocialMedia = (id,updatedSocialMedia) => axios.patch(`${url}/socialMedia/${id}`,updatedSocialMedia);
+export const deleteSocialMedia = (id) => axios.delete(`${url}/socialMedia/${id}`);
+
+
+
 export const fetchTestimonial = () => axios.get(`${url}/testimonial`);
 export const fetchExperience = () => axios.get(`${url}/experience`);

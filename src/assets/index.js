@@ -36,6 +36,8 @@ import LinkedIn from "./contacts/LinkedIn.webp";
 import Instagram from "./contacts/Instagram.webp";
 
 import  {ReactComponent as EmailIcon} from "./icons/email.svg"
+import EditIcon from './icons/edit.svg';
+import { DeleteIcons } from "./icons/delete";
 // import  {ReactComponent as EmailIcon} from "./icons/email.svg"
 
 import CarRaceGameMenu from "./Projects/CarRaceGame/Menu.webp";
@@ -82,6 +84,8 @@ export {
   ProfileIcon,
 
   EmailIcon,
+EditIcon,
+DeleteIcons,
 
   CarRaceGameMenu,
   CarRaceGameGameOver,

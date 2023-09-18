@@ -5,7 +5,8 @@ const initialState = {
   
   const BioReducer = (state = [], action) => {
     switch (action.type) {
-      case FETCH_BIO_SUCCESS: console.log(state,action);
+      case FETCH_BIO_SUCCESS: 
+      // console.log(state,action);
         return action.payload ;
       case POST_BIO_SUCCESS:
         return [...state, action.payload]

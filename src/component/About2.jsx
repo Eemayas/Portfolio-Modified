@@ -4,12 +4,16 @@ import { motion } from "framer-motion";
 import { services } from "../constants";
 import { fadeIn, slideIn } from "../utils/motion.js";
 import { SectionWrapper } from "../hoc";
+import { EditIcon, DeleteIcons } from "../assets";
 // import { Form } from "react-router-dom";
 // import { styles } from "../style";
 import FileBase from "react-file-base64";
-import { postBio } from "../action/dataAction";
-import { useDispatch } from "react-redux";
-const ServiceCard = ({ index, title, icon }) => {
+import { deleteBioCard, patchBioCard, postBio, postBioCard } from "../action/dataAction";
+import { useDispatch, useSelector } from "react-redux";
+import { CircularProgress } from "@material-ui/core";
+
+const ServiceCard = ({ setId, _id, index, title, selectedImage, setForm }) => {
+  const dispatch = useDispatch();
   return (
     <Tilt className="xs:w-[250px] w-full ">
       <motion.div
@@ -21,8 +25,9 @@ const ServiceCard = ({ index, title, icon }) => {
           options={{ max: 45, scale: 1, speed: 450 }}
         >
           <img
+            id={_id}
             loading="lazy"
-            src={icon}
+            src={selectedImage}
             alt={title}
             className="w-16 h-16 object-contain "
           ></img>
@@ -31,58 +36,92 @@ const ServiceCard = ({ index, title, icon }) => {
           </h3>
         </div>
       </motion.div>
+      <div className="flex items-end flex-col justify-normal  xs:justify-end">
+        <button
+             onClick={() => {
+              setId(_id);
+              setForm({ title:title,
+              selectedImage: selectedImage,});
+            }}
+          className="bg-tertiary flex justify-end mt-2 py-3 px-5 rounded-xl outline-none w-fit text-white font-bold shadow-md shadow-slate-500"
+        >
+          <img src={EditIcon} className="h-[20px]" alt="Edit Icon" />
+        </button>
+        <button
+         onClick={() => {
+          dispatch(deleteBioCard(_id))
+        }}
+          className="bg-tertiary flex justify-end mt-2 py-3 px-5 rounded-xl outline-none w-fit text-white font-bold shadow-md shadow-slate-500"
+        >
+          <img className="h-[20px]" src={DeleteIcons} />
+        </button>
+      </div>
+      <div className="flex flex-col justify-normal  xs:justify-end">
+      
+       
+      </div>
     </Tilt>
   );
 };
 const About2 = () => {
-  return (
-    <>
-      <div className=" flex flex-wrap gap-10">
-        {services.map((service, index) => {
-          return (
-            <ServiceCard
-              key={service.title}
-              index={index}
-              title={service.title}
-              {...service}
-            />
-          );
-        })}
-      </div>
-      <About2Form/>
-    </>
-  );
-};
-
-const About2Form = () => {
-  const dispatch= useDispatch()
   const [form, setForm] = useState({
     title: "",
     selectedImage: "",
   });
-  const formRef = useRef();
-  const [loading, setLoading] = useState(false);
-  // const handleChange = (e) => {
-  //   const { target } = e;
-  //   const { name, value } = target;
+  const [id, setId] = useState("0");
 
-  //   setForm({
-  //     ...form,
-  //     [name]: value,
-  //   });
-  // };
+  const bioCards = useSelector((state) => state.BioCardReducer);
+  // console.log(bioCards);
+  return (
+    <>
+      <div className=" flex flex-wrap gap-10">
+        {bioCards.length ? (
+          bioCards.map((service, index) => {
+            return (
+              <ServiceCard
+                setForm={setForm}
+                setId={setId}
+                key={service.title}
+                index={index}
+                title={service.title}
+                {...service}
+              />
+            );
+          })
+        ) : (
+          <CircularProgress />
+        )}
+      </div>
+      <About2Form id={id} form={form} setForm={setForm} />
+    </>
+  );
+};
+
+const About2Form = ({ id, form, setForm }) => {
+  const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
+  // const [form, setForm] = useState({
+  //   title: "",
+  //   selectedImage: "",
+  // });
+  const formRef = useRef();
+ 
   const handleSubmit = (e) => {
+    setLoading(true);
     console.log(form);
     e.preventDefault();
-    setLoading(true);
-    dispatch( postBio(form));
-    setLoading(false);
+    if(id!="0") {
+      dispatch(patchBioCard(id,form));
+    }else{
+      dispatch(postBioCard(form));
+    }
     
+    setLoading(false);
   };
   return (
     <>
       <div
-        className={`xl:mt-12 flex  xl:flex-row flex-col gap-10 overflow-hidden`}
+        className={`mt-12 flex  xl:flex-row flex-col gap-10 overflow-hidden`}
       >
         <motion.div
           variants={slideIn("left", "tween", 0.2, 1)}
@@ -99,13 +138,13 @@ const About2Form = () => {
                 type="text"
                 name="name"
                 value={form.title}
-                onChange={(e)=>setForm({ ...form, title: e.target.value })}
+                onChange={(e) => setForm({ ...form, title: e.target.value })}
                 placeholder="Web Developer/Flutter Developer/..."
                 className="bg-tertiary py-4 px-6 placeholder:text-secondary text-white rounded-lg outline-none border-none font-medium"
                 required
               />
             </label>
-         
+
             <label className="flex flex-col">
               <span className="text-white font-medium mb-4">
                 Select an Image
@@ -115,7 +154,7 @@ const About2Form = () => {
                   type="file"
                   multiple={false}
                   onDone={({ base64 }) =>
-                  setForm({ ...form, selectedImage: base64 })
+                    setForm({ ...form, selectedImage: base64 })
                   }
                 />
               </div>
@@ -166,7 +205,7 @@ const About2Form = () => {
 //     console.log(form);
 //     e.preventDefault();
 //     setLoading(true);
-    
+
 //   };
 //   return (
 //     <>

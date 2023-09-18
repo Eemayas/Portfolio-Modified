@@ -1,21 +1,34 @@
 import React, { useRef, useState } from "react";
 import { SectionWrapper } from "../hoc";
+import { EditIcon, DeleteIcons } from "../assets";
+// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { technologies } from "../constants";
 import { motion } from "framer-motion";
 import { Tilt } from "react-tilt";
-import { fadeIn,slideIn } from "../utils/motion.js";
+import { fadeIn, slideIn } from "../utils/motion.js";
 import FileBase from "react-file-base64";
-const TechCard = ({ index, title, icon }) => {
+import { useDispatch, useSelector } from "react-redux";
+import {
+  postBioSkill,
+  patchBioSkill,
+  deleteBioSkill,
+} from "../action/dataAction";
+import { CircularProgress } from "@material-ui/core";
+
+const TechCard = ({ setForm, setId, _id, index, title, selectedImage }) => {
+  const dispatch = useDispatch();
   return (
     <Tilt className="xs:w-[120px] w-[120px] ">
-      <motion.div
+      <motion.div  variants={fadeIn("right", "spring", 0.25 * index, 0.55)}>
+      <div
         className="w-full green-pink-gradient p-[1px] rounded-[30px] shadow-card "
-        variants={fadeIn("right", "spring", 0.25 * index, 0.55)}
+       
       >
         <div className="bg-tertiary rounded-[30px] ">
           <img
+            id={_id}
             loading="lazy"
-            src={icon}
+            src={selectedImage}
             alt={title}
             className="w-full h-full object-contain py-5 px-5"
           ></img>
@@ -24,54 +37,84 @@ const TechCard = ({ index, title, icon }) => {
             {title}
           </div>
         </div>
+      </div>
+      <div className="flex items-end flex-col justify-normal  xs:justify-end">
+        <button
+          onClick={() => {
+            
+            setId(_id);
+            setForm({ title: title, selectedImage: selectedImage });
+          }}
+          className="bg-tertiary flex justify-end mt-2 py-3 px-5 rounded-xl outline-none w-fit text-white font-bold shadow-md shadow-slate-500"
+        >
+          <img src={EditIcon} className="h-[20px]" alt="Edit Icon" />
+        </button>
+        <button
+          onClick={() => {
+            dispatch(deleteBioSkill(_id));
+          }}
+          className="bg-tertiary flex justify-end mt-2 py-3 px-5 rounded-xl outline-none w-fit text-white font-bold shadow-md shadow-slate-500"
+        >
+          <img className="h-[20px]" src={DeleteIcons} />
+        </button>
+      </div>
       </motion.div>
     </Tilt>
   );
 };
 const Tech = () => {
-  return (
-    <><div className="flex flex-row flex-wrap justify-center gap-10">
-      {technologies.map((technology, index) => (
-        <TechCard
-          index={index}
-          key={technology.name}
-          icon={technology.icon}
-          title={technology.name}
-        />
-      ))}
-    </div>
-    <TechForm/>
-    </>
-    
-  );
-};
-
-const TechForm = () => {
   const [form, setForm] = useState({
     title: "",
     selectedImage: "",
   });
+  const [id, setId] = useState("0");
+  const bioSkils = useSelector((state) => state.BioSkillReducer);
+  // console.log(bioSkils);
+  return (
+    <>
+      {bioSkils.length ? (
+        <div className="flex flex-row flex-wrap justify-center gap-10">
+          {bioSkils.map((technology, index) => (
+            <TechCard
+              setForm={setForm}
+              setId={setId}
+              _id={technology._id}
+              index={index}
+              key={technology.title}
+              selectedImage={technology.selectedImage}
+              title={technology.title}
+            />
+          ))}
+        </div>
+      ) : (
+        <CircularProgress />
+      )}
+      <TechForm id={id} form={form} setForm={setForm} />
+    </>
+  );
+};
+
+const TechForm = ({ id, form, setForm }) => {
+  const dispatch = useDispatch();
+// console.log(id);
   const formRef = useRef();
   const [loading, setLoading] = useState(false);
-  const handleChange = (e) => {
-    const { target } = e;
-    const { name, value } = target;
-
-    setForm({
-      ...form,
-      [name]: value,
-    });
-  };
   const handleSubmit = (e) => {
+    setLoading(true);
     console.log(form);
     e.preventDefault();
-    setLoading(true);
-    
+    if(id!="0") {
+    dispatch(patchBioSkill(id,form));
+    }else{
+    dispatch(postBioSkill(form));
+    }
+
+    setLoading(false);
   };
   return (
     <>
       <div
-        className={`xl:mt-12 flex  xl:flex-row flex-col gap-10 overflow-hidden`}
+        className={`mt-12 flex  xl:flex-row flex-col gap-10 overflow-hidden`}
       >
         <motion.div
           variants={slideIn("left", "tween", 0.2, 1)}
@@ -88,13 +131,13 @@ const TechForm = () => {
                 type="text"
                 name="name"
                 value={form.title}
-                onChange={(e)=>setForm({ ...form, title: e.target.value })}
-                placeholder="Web Developer/Flutter Developer/..."
+                onChange={(e) => setForm({ ...form, title: e.target.value })}
+                placeholder="C/C++/Flutter/...."
                 className="bg-tertiary py-4 px-6 placeholder:text-secondary text-white rounded-lg outline-none border-none font-medium"
                 required
               />
             </label>
-         
+
             <label className="flex flex-col">
               <span className="text-white font-medium mb-4">
                 Select an Image
@@ -104,7 +147,7 @@ const TechForm = () => {
                   type="file"
                   multiple={false}
                   onDone={({ base64 }) =>
-                  setForm({ ...form, selectedImage: base64 })
+                    setForm({ ...form, selectedImage: base64 })
                   }
                 />
               </div>

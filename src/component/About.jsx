@@ -11,7 +11,6 @@ import { fetchBio, patchBio, postBio } from "../action/dataAction";
 import { useSelector } from "react-redux";
 import { CircularProgress } from "@material-ui/core";
 
-
 const ProfileAvatars = (imgsrc) => {
   // console.log(imgsrc.imgsrc)
   return (
@@ -31,14 +30,8 @@ const ProfileAvatars = (imgsrc) => {
   );
 };
 const About = () => {
-  const [currentId, setCurrentId] = useState(0);
   const dispatch = useDispatch();
-
-  // useEffect(() => {
-  //   dispatch(fetchBio());
-  // }, [currentId, dispatch]);
-
-   const bios = useSelector((state) => state.BioReducer);
+  const bios = useSelector((state) => state.BioReducer);
   // console.log(bios);
   const isAdmin = true;
   const Bio = `"Hello there! I am a highly skilled computer engineering professional with expertise in various programming languages such as C, C++, Flutter, Dart, React, HTML, CSS, and JavaScript. I am a quick learner and always eager to take on new challenges that help me further expand my skillset. In my free time, I love to indulge in my hobbies of cycling and reading novels and comics. My passion for technology and innovation drives me to continuously learn and stay up-to-date with the latest trends in the industry. With my strong work ethic and exceptional problem-solving skills, I am confident in my ability to contribute to any project I am a part of. Thank you for taking the time to read my bio, and I look forward to potentially working with you!"`;
@@ -62,12 +55,16 @@ const About = () => {
           <ProfileAvatars imgsrc={bios[0].selectedImage} />
         )}
       </div>
-      {isAdmin ? <Form formI={bios} setCurrentId={setCurrentId}/> : <div></div>}
+      {isAdmin ? (
+        <Form formI={bios} />
+      ) : (
+        <div></div>
+      )}
     </>
   );
 };
 
-const Form = ({ formI ,setCurrentId}) => {
+const Form = ({ formI }) => {
   // console.log(formI);
   const dispatch = useDispatch();
   const [form, setForm] = useState({
@@ -80,15 +77,14 @@ const Form = ({ formI ,setCurrentId}) => {
     setLoading(true);
     console.log(form);
     e.preventDefault();
-    if(formI==0)
-    {
+    if (formI == 0) {
       dispatch(postBio(form));
-      setCurrentId(90);
-    }else{
-      dispatch(patchBio(formI[0]._id,form));
-      setCurrentId(formI[0]._id);
+  
+    } else {
+      dispatch(patchBio(formI[0]._id, form));
+      
     }
-    
+
     setLoading(false);
   };
   useEffect(() => {

@@ -25,14 +25,14 @@ const About = () => {
         <h2 className={styles.sectionHeadText}>Overview</h2>
       </motion.div>
       <div className="md:flex-row flex flex-col-reverse justify-around">
-        {!bios.length ? <CircularProgress /> : <motion.p
+        <motion.p
           className="md:w-[50%] mt-4 w-[100%] text-justify text-secondary text-[17px]  leading-[30px]"
           variants={fadeIn("", "", 0.1, 1)}
         >
-          {bios[0].bio}
+          {!bios.length ? "Loading......" : bios[0].bio}
           {/* {!bios.length ? <CircularProgress /> : bios[0].bio} */}
           {/* {Bio} */}
-        </motion.p>}
+        </motion.p>
         {!bios.length ? (
           <p></p>
         ) : (

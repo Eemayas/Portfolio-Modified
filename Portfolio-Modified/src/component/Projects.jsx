@@ -4,11 +4,10 @@ import { motion } from "framer-motion";
 import { styles } from "../style";
 import { github } from "../assets";
 import { SectionWrapper } from "../hoc";
-import { projects } from "../constants";
+// import { projects } from "../constants";
 import { fadeIn, slideIn, textVariant } from "../utils/motion";
 import { EditIcon, DeleteIcons } from "../assets";
 import FileBase from "react-file-base64";
-import { useNavigate } from "react-router-dom";
 import { deleteProject, patchProject, postProject } from "../action/dataAction";
 import { useDispatch, useSelector } from "react-redux";
 import { CircularProgress } from "@material-ui/core";
@@ -39,7 +38,6 @@ import { CircularProgress } from "@material-ui/core";
 //             alt="project_image"
 //             className="w-full h-full object-cover rounded-2xl"
 //           />
-
 //           <div className="absolute inset-0 flex justify-end m-3 card-img_hover">
 //             <div
 //               onClick={() => window.open(source_code_link, "_blank")}
@@ -53,12 +51,10 @@ import { CircularProgress } from "@material-ui/core";
 //             </div>
 //           </div>
 //         </div>
-
 //         <div className="mt-5">
 //           <h3 className="text-white font-bold text-[24px]">{name}</h3>
 //           <p className="mt-2 text-secondary text-[14px]">{description}</p>
 //         </div>
-
 //         <div className="mt-4 flex flex-wrap gap-2">
 //           {tags.map((tag) => (
 //             <p
@@ -73,7 +69,6 @@ import { CircularProgress } from "@material-ui/core";
 //       <div className="flex items-end flex-col justify-normal  xs:justify-end">
 //         <button
 //           onClick={() => {
-
 //             setId(_id);
 //             setForm({ title: title, selectedImage: selectedImage });
 //           }}
@@ -93,6 +88,8 @@ import { CircularProgress } from "@material-ui/core";
 //     </motion.div>
 //   );
 // };
+
+
 const tagColorList=["green-text-gradient","pink-text-gradient","blue-text-gradient"];
 const ProjectCard = ({
   setForm,
@@ -178,14 +175,14 @@ const ProjectCard = ({
           }}
           className="bg-tertiary flex justify-end mt-2 py-3 px-5 rounded-xl outline-none w-fit text-white font-bold shadow-md shadow-slate-500"
         >
-          <img className="h-[20px]" src={DeleteIcons} />
+          <img className="h-[20px]" src={DeleteIcons} alt="Delete Icon" />
         </button>
       </div>
     </motion.div>
   );
 };
 
-const Works = () => {
+const Projects = () => {
   const [form, setForm] = useState({
     name: "",
     description: "",
@@ -195,10 +192,6 @@ const Works = () => {
     websitelinks: "",
   });
   const [id, setId] = useState("0");
-  const navigate = useNavigate();
-  const hanndleNavigatetoProjectCollection = () => {
-    return navigate("./projectcollection");
-  };
   const projectss = useSelector((state) => state.ProjectReducer);
   // console.log(projectss);
   const projectDescription = `Below are a few selected projects that demonstrate my skills and experience, showcasing real-world examples of my work. Each project is accompanied by a brief description, as well as links to code repositories and live demos. These projects serve as tangible evidence of my ability to tackle intricate challenges, adapt to various technologies, and efficiently handle project management`;
@@ -380,4 +373,4 @@ const ProjectForm = ({setId, form, setForm, id }) => {
     </>
   );
 };
-export default SectionWrapper(Works, "project");
+export default SectionWrapper(Projects, "project");

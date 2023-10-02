@@ -36,6 +36,10 @@ export const patchSocialMedia = (id,updatedSocialMedia) => axios.patch(`${url}/s
 export const deleteSocialMedia = (id) => axios.delete(`${url}/socialMedia/${id}`);
 
 
-
 export const fetchTestimonial = () => axios.get(`${url}/testimonial`);
+export const postTestimonial = (newTestimonial) => axios.post(`${url}/testimonial`,newTestimonial);
+export const patchTestimonial = (id,updatedTestimonial) => axios.patch(`${url}/testimonial/${id}`,updatedTestimonial);
+export const deleteTestimonial = (id) => axios.delete(`${url}/testimonial/${id}`);
+
+
 export const fetchExperience = () => axios.get(`${url}/experience`);

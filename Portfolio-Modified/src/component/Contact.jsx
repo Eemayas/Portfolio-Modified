@@ -92,7 +92,7 @@ const ContactCard = ({ index, name, links, logo, _id, setForm, setId }) => {
             }}
             className="bg-tertiary flex justify-end mt-2 py-3 px-5 rounded-xl outline-none w-fit text-white font-bold shadow-md shadow-slate-500"
           >
-            <img className="h-[20px]" src={DeleteIcons} />
+            <img className="h-[20px]" src={DeleteIcons}  alt="Delete Icon"/>
           </button>
         </div>
       </motion.div>

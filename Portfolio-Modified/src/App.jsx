@@ -1,13 +1,17 @@
 import './App.css';
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
 import LandingPage from './LandingPage';
-import ProjectCollection from './ProjectCollection';
-import ProjectSlider from './component/ProjectSlider';
 import { useDispatch } from 'react-redux';
 import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
-import { fetchBio, fetchBioCard, fetchBioSkill, fetchContact, fetchData, fetchExperience, fetchProject, fetchTestimonial } from './action/dataAction.js';
+// import { fetchBio, fetchBioCard, fetchBioSkill, fetchContact, fetchExperience, fetchProject, fetchTestimonial } from './action/dataAction';
 import { fetchSocialMedia } from './action/socialMediaAction';
+import { fetchBio } from './action/bioAction';
+import { fetchBioCard } from './action/bioCardAction';
+import { fetchBioSkill } from './action/bioSkillAction';
+import { fetchProject } from './action/projectAction';
+import { fetchContact } from './action/contactAction';
+import { fetchTestimonial } from './action/testinomialAction';
+import { fetchExperience } from './action/experiencesAction';
 
 function App() {
   const dispatch = useDispatch();
@@ -25,37 +29,9 @@ function App() {
   return (
     <BrowserRouter>
       <div className="relative z-0 bg-primary">
-        <Routes>
-          <Route path="/" element=
-          {<LandingPage/>}/>
-          <Route path="/projectcollection" element={<ProjectCollection />} />
-          {/* <Route path="/projectcollection/slider" element={<ProjectSlider />} /> */}
-        </Routes>
+          <LandingPage/>
       </div>
     </BrowserRouter>
   );
 }
-
-// function DataList({ data, fetchData }) {
-//   useEffect(() => {
-//     fetchData();
-//   }, [fetchData]);
-
-//   return (
-//     <div>
-//       <h1>Data List</h1>
-//       <ul>
-//         {data.map((item) => (
-//           <li key={item.id}>{item.name}</li>
-//         ))}
-//       </ul>
-//     </div>
-//   );
-// }
-
-// const mapStateToProps = (state) => ({
-//   data: state.data,
-// });
-
-
 export default App;

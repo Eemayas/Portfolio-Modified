@@ -3,9 +3,6 @@ import {
   POST_BIO_SUCCESS,
   PATCH_BIO_SUCCESS,
 } from "../constant";
-const initialState = {
-  data: [],
-};
 
 const BioReducer = (state = [], action) => {
   switch (action.type) {

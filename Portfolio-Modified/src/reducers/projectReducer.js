@@ -4,9 +4,7 @@ import {
   PATCH_PROJECT_SUCCESS,
   DELETE_PROJECT_SUCCESS,
 } from "../constant";
-const initialState = {
-  data: [],
-};
+
 
 const ProjectReducer = (state = [], action) => {
   switch (action.type) {

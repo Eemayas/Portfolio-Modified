@@ -38,6 +38,7 @@ const ServiceCard = ({ setId, _id, index, title, selectedImage, setForm }) => {
       </motion.div>
       <div className="flex items-end flex-col justify-normal  xs:justify-end">
         <button
+       
              onClick={() => {
               setId(_id);
               setForm({ title:title,
@@ -53,7 +54,7 @@ const ServiceCard = ({ setId, _id, index, title, selectedImage, setForm }) => {
         }}
           className="bg-tertiary flex justify-end mt-2 py-3 px-5 rounded-xl outline-none w-fit text-white font-bold shadow-md shadow-slate-500"
         >
-          <img className="h-[20px]" src={DeleteIcons} />
+          <img className="h-[20px]" src={DeleteIcons} alt="Delete Icon" />
         </button>
       </div>
       <div className="flex flex-col justify-normal  xs:justify-end">

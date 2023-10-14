@@ -50,7 +50,7 @@ const Hero = () => {
               </p>
             </div>
           </div>
-          <div className="pt-4 flex flex-row flex-wrap justify-center gap-5 md:gap-10">
+          <div className="pt-9 flex flex-row flex-wrap justify-center gap-5 md:gap-10">
             {contacts.map((contact, index) => (
               <ContactCard
                 index={index}
@@ -93,7 +93,7 @@ const ProfileAvatars = () => {
           alt=".."
           // className="shadow-slate-500 shadow-md aspect-w-16 aspect-h-9 w-48 h-27 rounded-2xl bg-center bg-cover duration-500 object-cover"
           loading="lazy"
-          className="shadow-slate-500 shadow-md aspect-w-16 aspect-h-9 w-60 h-60 rounded-2xl bg-center bg-cover duration-500 object-cover"
+          className=" shadow-slate-500 shadow-md w-60 h-60 aspect-square rounded-2xl bg-center bg-cover duration-500 object-cover"
         />
       </div>
     </div>
@@ -102,7 +102,7 @@ const ProfileAvatars = () => {
 const ContactCard = ({ index, name, links, logo }) => {
   return (
     <motion.div
-      className="xs:w-[50px] w-[50px] green-pink-gradient p-[1px] rounded-[10px] shadow-card "
+      className=" w-[50px] green-pink-gradient p-[1.5px] rounded-[10px] shadow-card "
       variants={fadeIn("right", "spring", 0.25 * index, 0.55)}
     >
       <div
@@ -120,74 +120,7 @@ const ContactCard = ({ index, name, links, logo }) => {
   );
 };
 
-// const ContactCard = ({ index, name, links, logo }) => {
-//   return (
-//     <motion.div
-//       className="green-pink-gradient p-[1px] rounded-[10px] shadow-card "
-//       variants={fadeIn("right", "spring", 0.25 * index, 0.55)}
-//     >
-//       <div className="flex justify-center items-center h-[45px] w-[45px] bg-tertiary rounded-[10px]" onClick={() => window.open(links, "_blank")}>
-//     <i className={`${logo} text-white text-[60px]`}></i>
-// </div>
-//     </motion.div>
-//   );
-// };
 
 
 export default SectionWrapper(Hero);
 
-{
-  /* <div
-        className={`${styles.paddingX} absolute top-[120px]  max-w-7xl mx-auto flex flex-col-reverse md:flex-row  gap-5  `}
-      >
-        <div
-          className={`inset-0 sm:w-[60%] mx-auto flex flex-row items-start gap-5`}
-        >
-          <div className="flex flex-col justify-center items-center mt-5">
-            <div className="w-5 h-5 rounded-full bg-[#915eff]" />
-            <div className="w-1 sm:h-80 h-40 violet-gradient" />
-          </div>
-          <div>
-            <h1 className={`${styles.heroHeadText}`}>
-              Hi, I'm{" "}
-              <span className="text-[#915eff] ">
-                <TypeAnimation
-                  sequence={["Prashant Manandhar", 1000]}
-                  wrapper="span"
-                  cursor={false}
-                />
-              </span>
-            </h1>
-            <p className={`${styles.heroSubText} mt-2 text-white-100 `}>
-              <TypeAnimation
-                sequence={[
-                  "Flutter Developer..",
-                  1000,
-                  "React Developer..",
-                  1000,
-                  "Web Developer..",
-                  1000,
-                ]}
-                cursor={true}
-                repeat={Infinity}
-                wrapper="span"
-              />
-            </p>
-          </div>
-        </div>
-        <ProfileAvatars />
-      </div> */
-}
-
-{
-  /* <Avatar
-          style={{ height: "80%", width: "80%" }}
-          className=" border-4 border-transparent animate-circle-rotate"
-          src={ProfilePic2}
-          alt={"profile Pic"}
-        /> */
-}
-{
-  /* <div className="absolute w-full h-full border-t-4 border-b-4 border-t-lime-500 border-b-blue-500 border-opacity-50 rounded-full animate-spin-right"></div>
-        <div className="absolute w-[85%] h-[85%] border-l-4 border-r-4 border-l-[#ff0000] border-r-[#ff8000] border-opacity-50 rounded-full animate-spin-left"></div> */
-}

@@ -7,11 +7,69 @@ import { fadeIn, slideIn, textVariant } from "../utils/motion";
 import { EditIcon, DeleteIcons } from "../assets";
 import { useDispatch, useSelector } from "react-redux";
 import FileBase from "react-file-base64";
-import { deleteTestimonial, patchTestimonial, postTestimonial } from "../action/testinomialAction";
+import {
+  deleteTestimonial,
+  patchTestimonial,
+  postTestimonial,
+} from "../action/testinomialAction";
 import { CircularProgress } from "@material-ui/core";
-import { deleteProject } from "../action/dataAction";
+
+const Feedbacks = () => {
+  const [form, setForm] = useState({
+    name: "",
+    testimonial: "",
+    designation: "",
+    image: "",
+    company: "",
+  });
+  const [id, setId] = useState("0");
+  const testimonials = useSelector((state) => state.TestimonialReducer);
+  const adminState = useSelector((state) => state.AdminReducer);
+  // console.log(testimonials);
+  return (
+    <>
+      <div className="mt-12 bg-black-100 pb-5 rounded-[20px] ">
+        <div
+          className={`${styles.padding} bg-tertiary  rounded-2xl min-h-[300px]`}
+        >
+          <motion.div variants={textVariant()}>
+            <p className={styles.sectionSubText}>What others say</p>
+            <h2 className={styles.sectionHeadText}>Testimonials.</h2>
+          </motion.div>
+        </div>
+        <div className={`${styles.paddingX} -mt-20 pd-14 flex flex-wrap gap-7`}>
+          {testimonials.length ? (
+            <div className=" mt-20 flex flex-wrap justify-center gap-7">
+              {testimonials.map((testimonial, index) => (
+                <FeedBackCard
+                  adminState={adminState}
+                  key={`testinomial-${index} `}
+                  index={index}
+                  {...testimonial}
+                  // _id={id}
+                  setForm={setForm}
+                  setId={setId}
+                />
+              ))}
+            </div>
+          ) : (
+            <CircularProgress aria-label="Uploading progress: 50%" />
+          )}
+        </div>
+      </div>
+      <TestinomialForm
+        adminState={adminState}
+        form={form}
+        setId={setId}
+        setForm={setForm}
+        id={id}
+      />
+    </>
+  );
+};
 const FeedBackCard = ({
   index,
+  adminState,
   testimonial,
   name,
   designation,
@@ -48,13 +106,16 @@ const FeedBackCard = ({
               loading="lazy"
               src={image}
               alt={`Feedback-by-${name}`}
-              className="w-10 rounded-full object-cover"
+              className="w-10 h-10 rounded-full object-cover"
             />
           </div>
         </div>
       </div>
 
-      <div className="flex items-end flex-col justify-normal  xs:justify-end">
+      <div
+        className="flex items-end flex-col justify-normal  xs:justify-end"
+        style={{ display: adminState ? "block" : "none" }}
+      >
         <button
           onClick={() => {
             console.log(_id);
@@ -69,7 +130,7 @@ const FeedBackCard = ({
           }}
           className="bg-tertiary flex justify-end mt-2 py-3 px-5 rounded-xl outline-none w-fit text-white font-bold shadow-md shadow-slate-500"
         >
-          <img src={EditIcon} className="h-[20px]" alt="Edit Icon" />
+          <img src={EditIcon} className="h-[20px] w-[20px]" alt="Edit Icon" />
         </button>
         <button
           onClick={() => {
@@ -77,67 +138,18 @@ const FeedBackCard = ({
           }}
           className="bg-tertiary flex justify-end mt-2 py-3 px-5 rounded-xl outline-none w-fit text-white font-bold shadow-md shadow-slate-500"
         >
-          <img className="h-[20px]" src={DeleteIcons}  alt="Delete Icon"/>
+          <img
+            className="h-[20px] w-[20px]"
+            src={DeleteIcons}
+            alt="Delete Icon"
+          />
         </button>
       </div>
     </motion.div>
   );
 };
 
-const Feedbacks = () => {
-  const [form, setForm] = useState({
-    name: "",
-    testimonial: "",
-    designation: "",
-    image: "",
-    company: "",
-  });
-  const [id, setId] = useState("0");
-  const testimonials = useSelector((state) => state.TestimonialReducer);
-  console.log(testimonials);
-  return (
-    <>
-      <div className="mt-12 bg-black-100 pb-5 rounded-[20px] ">
-        <div
-          className={`${styles.padding} bg-tertiary  rounded-2xl min-h-[300px]`}
-        >
-          <motion.div variants={textVariant()}>
-            <p className={styles.sectionSubText}>What others say</p>
-            <h2 className={styles.sectionHeadText}>Testimonials.</h2>
-          </motion.div>
-        </div>
-        <div className={`${styles.paddingX} -mt-20 pd-14 flex flex-wrap gap-7`}>
-          {/* {testimonials.map((testimonial, index) => (
-            <FeedBackCard
-              key={`testinomial-${index} `}
-              index={index}
-              {...testimonial}
-            />
-          ))} */}
-          {testimonials.length ? (
-            <div className=" mt-20 flex flex-wrap justify-center gap-7">
-              {testimonials.map((testimonial, index) => (
-                <FeedBackCard
-                  key={`testinomial-${index} `}
-                  index={index}
-                  {...testimonial}
-                  // _id={id}
-                  setForm={setForm}
-                  setId={setId}
-                />
-              ))}
-            </div>
-          ) : (
-            <CircularProgress />
-          )}
-        </div>
-      </div>
-      <TestinomialForm form={form} setId={setId} setForm={setForm} id={id} />
-    </>
-  );
-};
-
-const TestinomialForm = ({ setId, form, setForm, id }) => {
+const TestinomialForm = ({ adminState, setId, form, setForm, id }) => {
   const dispatch = useDispatch();
   const formRef = useRef();
   const [loading, setLoading] = useState(false);
@@ -165,6 +177,7 @@ const TestinomialForm = ({ setId, form, setForm, id }) => {
     <>
       <div
         className={`mt-12 flex  xl:flex-row flex-col gap-10 overflow-hidden`}
+        style={{ display: adminState ? "block" : "none" }}
       >
         <motion.div
           variants={slideIn("left", "tween", 0.2, 1)}
@@ -227,19 +240,6 @@ const TestinomialForm = ({ setId, form, setForm, id }) => {
                 required
               />
             </label>
-            {/* <label className="flex flex-col">
-              <span className="text-white font-medium mb-4">Website Links</span>
-              <input
-                type="url"
-                name="name"
-                value={form.websitelinks}
-                onChange={(e) =>
-                  setForm({ ...form, websitelinks: e.target.value })
-                }
-                placeholder="https://www.manandharprashant.com.np/"
-                className="bg-tertiary py-4 px-6 placeholder:text-secondary text-white rounded-lg outline-none border-none font-medium"
-              />
-            </label> */}
             <label className="flex flex-col">
               <span className="text-white font-medium mb-4">
                 Select an Image

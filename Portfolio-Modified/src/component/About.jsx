@@ -1,23 +1,20 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect} from "react";
 import { motion } from "framer-motion";
 import { styles } from "../style";
-import { C, ProfilePic2 } from "../assets";
+// import { C, ProfilePic2 } from "../assets";
 import { fadeIn, textVariant, slideIn } from "../utils/motion.js";
 import { SectionWrapper } from "../hoc";
 import { Avatar } from "@mui/material";
 import FileBase from "react-file-base64";
 import { useDispatch } from "react-redux";
-import { fetchBio, patchBio, postBio } from "../action/dataAction";
+import { patchBio, postBio } from "../action/bioAction";
 import { useSelector } from "react-redux";
-import { CircularProgress } from "@material-ui/core";
+// import { CircularProgress } from "@material-ui/core";
 
 
 const About = () => {
-  const dispatch = useDispatch();
   const bios = useSelector((state) => state.BioReducer);
-  // console.log(bios);
-  const isAdmin = true;
-  const Bio = `"Hello there! I am a highly skilled computer engineering professional with expertise in various programming languages such as C, C++, Flutter, Dart, React, HTML, CSS, and JavaScript. I am a quick learner and always eager to take on new challenges that help me further expand my skillset. In my free time, I love to indulge in my hobbies of cycling and reading novels and comics. My passion for technology and innovation drives me to continuously learn and stay up-to-date with the latest trends in the industry. With my strong work ethic and exceptional problem-solving skills, I am confident in my ability to contribute to any project I am a part of. Thank you for taking the time to read my bio, and I look forward to potentially working with you!"`;
+  // const Bio = `"Hello there! I am a highly skilled computer engineering professional with expertise in various programming languages such as C, C++, Flutter, Dart, React, HTML, CSS, and JavaScript. I am a quick learner and always eager to take on new challenges that help me further expand my skillset. In my free time, I love to indulge in my hobbies of cycling and reading novels and comics. My passion for technology and innovation drives me to continuously learn and stay up-to-date with the latest trends in the industry. With my strong work ethic and exceptional problem-solving skills, I am confident in my ability to contribute to any project I am a part of. Thank you for taking the time to read my bio, and I look forward to potentially working with you!"`;
   return (
     <>
       <motion.div variants={textVariant()}>
@@ -30,8 +27,6 @@ const About = () => {
           variants={fadeIn("", "", 0.1, 1)}
         >
           {!bios.length ? "Loading......" : bios[0].bio}
-          {/* {!bios.length ? <CircularProgress /> : bios[0].bio} */}
-          {/* {Bio} */}
         </motion.p>
         {!bios.length ? (
           <p></p>
@@ -39,18 +34,12 @@ const About = () => {
           <ProfileAvatars imgsrc={bios[0].selectedImage} />
         )}
       </div>
-      {isAdmin ? (
-        <Form formI={bios} />
-      ) : (
-        <div></div>
-      )}
+      <Form formI={bios} />
     </>
   );
 };
 
-
 const ProfileAvatars = (imgsrc) => {
-  // console.log(imgsrc.imgsrc)
   return (
     <div className="w-full h-60  flex justify-center items-center md:h-80 md:w-80">
       <div className="w-60 relative flex justify-center items-center md:w-full h-full">
@@ -67,29 +56,30 @@ const ProfileAvatars = (imgsrc) => {
     </div>
   );
 };
+
 const Form = ({ formI }) => {
   // console.log(formI);
+  const formRef = useRef();
   const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
+  const adminState = useSelector((state) => state.AdminReducer);
   const [form, setForm] = useState({
     bio: "",
     selectedImage: "",
   });
-  const formRef = useRef();
-  const [loading, setLoading] = useState(false);
+
   const handleSubmit = (e) => {
     setLoading(true);
     console.log(form);
     e.preventDefault();
     if (formI == 0) {
       dispatch(postBio(form));
-  
     } else {
       dispatch(patchBio(formI[0]._id, form));
-      
     }
-
     setLoading(false);
   };
+
   useEffect(() => {
     if (formI.length != 0) {
       setForm({
@@ -101,7 +91,8 @@ const Form = ({ formI }) => {
   return (
     <>
       <div
-        className={`mt-12 flex md:w-[80%]  xl:flex-row flex-col gap-10 overflow-hidden`}
+        className={` mt-12 flex md:w-[80%]  xl:flex-row flex-col gap-10 overflow-hidden`}
+        style={{ display: adminState ? "block" : "none" }}
       >
         <motion.div
           variants={slideIn("left", "tween", 0.2, 1)}
@@ -151,7 +142,7 @@ const Form = ({ formI }) => {
                   src={form.selectedImage}
                   alt="Selected"
                   // className="max-w-full mt-2 rounded-sm"
-                  className="max-w-full mt-2 rounded-[40px] border-4 border-red-500"
+                  className="max-w-full object-cover mt-2 h-60 w-60 rounded-[40px] border-4 border-red-500"
                 />
               </div>
             )}

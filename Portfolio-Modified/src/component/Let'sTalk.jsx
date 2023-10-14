@@ -4,7 +4,11 @@ import emailjs from "@emailjs/browser";
 import { styles } from "../style";
 import { SectionWrapper } from "../hoc";
 import { slideIn } from "../utils/motion";
-import { postContact, deleteContact, patchContact } from "../action/dataAction";
+import {
+  postContact,
+  deleteContact,
+  patchContact,
+} from "../action/contactAction";
 import { useDispatch, useSelector } from "react-redux";
 import { CircularProgress } from "@material-ui/core";
 import { EditIcon, DeleteIcons } from "../assets";
@@ -20,7 +24,7 @@ const LetsTalk = () => {
   });
   const [id, setId] = useState("0");
   const contacts = useSelector((state) => state.ContactReducer);
-  // console.log(contacts);
+  const adminState = useSelector((state) => state.AdminReducer);
   const formRef = useRef();
   const [loading, setLoading] = useState(false);
   const handleChange = (e) => {
@@ -124,14 +128,25 @@ const LetsTalk = () => {
             </button>
           </form>
         </motion.div>
-        <ContactInfo contacts={contacts} setForm={setForm} setId={setId} />
+        <ContactInfo
+          adminState={adminState}
+          contacts={contacts}
+          setForm={setForm}
+          setId={setId}
+        />
       </div>
-      <ContactForm setId={setId} form={form} setForm={setForm} id={id} />
+      <ContactForm
+        adminState={adminState}
+        setId={setId}
+        form={form}
+        setForm={setForm}
+        id={id}
+      />
     </>
   );
 };
 
-const ContactInfo = ({ contacts, setForm, setId }) => {
+const ContactInfo = ({ adminState, contacts, setForm, setId }) => {
   // console.log(contacts.length);
   return contacts.length ? (
     <motion.div
@@ -150,11 +165,19 @@ const ContactInfo = ({ contacts, setForm, setId }) => {
       ))}
     </motion.div>
   ) : (
-    <CircularProgress />
+    <CircularProgress aria-label="Uploading progress: 50%" />
   );
 };
 
-const ContactCard = ({ _id, setId, setForm, icon, title, detail }) => {
+const ContactCard = ({
+  adminState,
+  _id,
+  setId,
+  setForm,
+  icon,
+  title,
+  detail,
+}) => {
   const dispatch = useDispatch();
   return (
     <div className="flex flex-row items-center gap-3 ">
@@ -164,7 +187,10 @@ const ContactCard = ({ _id, setId, setForm, icon, title, detail }) => {
         <hr className="mt-2 mb-2 w-full bg-white" />
         <div className="small text-black-50">{detail}</div>
       </div>
-      <div className="flex  flex-col justify-normal  xs:justify-end">
+      <div
+        className="flex  flex-col justify-normal  xs:justify-end"
+        style={{ display: adminState ? "block" : "none" }}
+      >
         <button
           onClick={() => {
             setId(_id);
@@ -175,7 +201,7 @@ const ContactCard = ({ _id, setId, setForm, icon, title, detail }) => {
           }}
           className="bg-tertiary flex justify-end mt-2 py-3 px-5 rounded-xl outline-none w-fit text-white font-bold shadow-md shadow-slate-500"
         >
-          <img src={EditIcon} className="h-[20px]" alt="Edit Icon" />
+          <img src={EditIcon} className="h-[20px] w-[20px]" alt="Edit Icon" />
         </button>
         <button
           onClick={() => {
@@ -183,14 +209,18 @@ const ContactCard = ({ _id, setId, setForm, icon, title, detail }) => {
           }}
           className="bg-tertiary flex justify-end mt-2 py-3 px-5 rounded-xl outline-none w-fit text-white font-bold shadow-md shadow-slate-500"
         >
-          <img className="h-[20px]" src={DeleteIcons}  alt="Delete Icon"/>
+          <img
+            className="h-[20px] w-[20px]"
+            src={DeleteIcons}
+            alt="Delete Icon"
+          />
         </button>
       </div>
     </div>
   );
 };
 
-const ContactForm = ({ setId, setForm, id, form }) => {
+const ContactForm = ({ adminState,setId, setForm, id, form }) => {
   const dispatch = useDispatch();
 
   const formRef = useRef();
@@ -209,7 +239,7 @@ const ContactForm = ({ setId, setForm, id, form }) => {
     setForm({
       title: "",
       detail: "",
-      })
+    });
 
     setLoading(false);
   };
@@ -217,6 +247,7 @@ const ContactForm = ({ setId, setForm, id, form }) => {
     <>
       <div
         className={`mt-12 flex md:w-[80%]  xl:flex-row flex-col gap-10 overflow-hidden`}
+        style={{ display: adminState ? "block" : "none" }}
       >
         <motion.div
           variants={slideIn("left", "tween", 0.2, 1)}

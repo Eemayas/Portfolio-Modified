@@ -1,18 +1,20 @@
 import React, { useRef, useState } from "react";
 import { Tilt } from "react-tilt";
 import { motion } from "framer-motion";
-import { services } from "../constants";
+// import { services } from "../constants";
 import { fadeIn, slideIn } from "../utils/motion.js";
 import { SectionWrapper } from "../hoc";
 import { EditIcon, DeleteIcons } from "../assets";
-// import { Form } from "react-router-dom";
-// import { styles } from "../style";
 import FileBase from "react-file-base64";
-import { deleteBioCard, patchBioCard, postBio, postBioCard } from "../action/dataAction";
+import {
+  deleteBioCard,
+  patchBioCard,
+  postBioCard,
+} from "../action/bioCardAction";
 import { useDispatch, useSelector } from "react-redux";
 import { CircularProgress } from "@material-ui/core";
 
-const ServiceCard = ({ setId, _id, index, title, selectedImage, setForm }) => {
+const ServiceCard = ({ adminState,setId, _id, index, title, selectedImage, setForm }) => {
   const dispatch = useDispatch();
   return (
     <Tilt className="xs:w-[250px] w-full ">
@@ -36,31 +38,32 @@ const ServiceCard = ({ setId, _id, index, title, selectedImage, setForm }) => {
           </h3>
         </div>
       </motion.div>
-      <div className="flex items-end flex-col justify-normal  xs:justify-end">
+      <div className="flex items-end flex-col justify-normal  xs:justify-end"
+       style={{ display: adminState ? 'block' : 'none' }}
+       >
         <button
-       
-             onClick={() => {
-              setId(_id);
-              setForm({ title:title,
-              selectedImage: selectedImage,});
-            }}
+          onClick={() => {
+            setId(_id);
+            setForm({ title: title, selectedImage: selectedImage });
+          }}
           className="bg-tertiary flex justify-end mt-2 py-3 px-5 rounded-xl outline-none w-fit text-white font-bold shadow-md shadow-slate-500"
         >
-          <img src={EditIcon} className="h-[20px]" alt="Edit Icon" />
+          <img src={EditIcon} className="h-[20px] w-[20px]" alt="Edit Icon" />
         </button>
         <button
-         onClick={() => {
-          dispatch(deleteBioCard(_id))
-        }}
+          onClick={() => {
+            dispatch(deleteBioCard(_id));
+          }}
           className="bg-tertiary flex justify-end mt-2 py-3 px-5 rounded-xl outline-none w-fit text-white font-bold shadow-md shadow-slate-500"
         >
-          <img className="h-[20px]" src={DeleteIcons} alt="Delete Icon" />
+          <img
+            className="h-[20px] w-[20px]"
+            src={DeleteIcons}
+            alt="Delete Icon"
+          />
         </button>
       </div>
-      <div className="flex flex-col justify-normal  xs:justify-end">
-      
-       
-      </div>
+      {/* <div className="flex flex-col justify-normal  xs:justify-end"></div> */}
     </Tilt>
   );
 };
@@ -70,9 +73,9 @@ const About2 = () => {
     selectedImage: "",
   });
   const [id, setId] = useState("0");
-
+  const adminState = useSelector((state) => state.AdminReducer);
   const bioCards = useSelector((state) => state.BioCardReducer);
-  // console.log(bioCards);
+
   return (
     <>
       <div className=" flex flex-wrap gap-10">
@@ -80,6 +83,7 @@ const About2 = () => {
           bioCards.map((service, index) => {
             return (
               <ServiceCard
+              adminState={adminState}
                 setForm={setForm}
                 setId={setId}
                 key={service.title}
@@ -90,43 +94,40 @@ const About2 = () => {
             );
           })
         ) : (
-          <CircularProgress />
+          <CircularProgress aria-label="Uploading progress: 50%" />
         )}
       </div>
-      <About2Form setId={setId} id={id} form={form} setForm={setForm} />
+      <About2Form adminState={adminState} setId={setId} id={id} form={form} setForm={setForm} />
     </>
   );
 };
 
-const About2Form = ({setId, id, form, setForm }) => {
+const About2Form = ({ setId, id, form, setForm ,adminState}) => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
-  // const [form, setForm] = useState({
-  //   title: "",
-  //   selectedImage: "",
-  // });
   const formRef = useRef();
- 
+
   const handleSubmit = (e) => {
     setLoading(true);
     console.log(form);
     e.preventDefault();
-    if(id!="0") {
-      dispatch(patchBioCard(id,form));
-    }else{
+    if (id != "0") {
+      dispatch(patchBioCard(id, form));
+    } else {
       dispatch(postBioCard(form));
     }
     setId("0");
     setForm({
-        title: "",
-        selectedImage: "",
-      })
+      title: "",
+      selectedImage: "",
+    });
     setLoading(false);
   };
   return (
     <>
       <div
         className={`mt-12 flex  xl:flex-row flex-col gap-10 overflow-hidden`}
+        style={{ display: adminState ? 'block' : 'none' }}
       >
         <motion.div
           variants={slideIn("left", "tween", 0.2, 1)}

@@ -16,7 +16,6 @@ import {
   CommingSoon,
 
   Github,
-  Gmail,
   Facebook,
   Twitter,
   LinkedIn,

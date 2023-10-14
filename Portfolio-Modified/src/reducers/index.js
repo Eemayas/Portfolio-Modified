@@ -7,6 +7,7 @@ import ContactReducer from "./contactReducer";
 import SocialMediaReducer from "./socialMediaReducer";
 import TestimonialReducer from "./testimonialReducer";
 import ExperiencesReducer from "./experiencesReducer";
+import AdminReducer from "./adminReducer";
 export default combineReducers({
   BioReducer,
   ExperiencesReducer,
@@ -16,4 +17,5 @@ export default combineReducers({
   ContactReducer,
   SocialMediaReducer,
   TestimonialReducer,
+  AdminReducer,
 });

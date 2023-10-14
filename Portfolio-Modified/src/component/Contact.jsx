@@ -4,13 +4,17 @@ import { motion } from "framer-motion";
 import { fadeIn, slideIn, textVariant } from "../utils/motion";
 import { styles } from "../style";
 import { Tilt } from "react-tilt";
-import { contacts } from "../constants";
+// import { contacts } from "../constants";
 import FileBase from "react-file-base64";
 import { useDispatch, useSelector } from "react-redux";
 import { CircularProgress } from "@material-ui/core";
 import { EditIcon, DeleteIcons } from "../assets";
 
-import { deleteSocialMedia, patchSocialMedia, postSocialMedia } from "../action/socialMediaAction";
+import {
+  deleteSocialMedia,
+  patchSocialMedia,
+  postSocialMedia,
+} from "../action/socialMediaAction";
 const Contact = () => {
   const [form, setForm] = useState({
     name: "",
@@ -19,7 +23,7 @@ const Contact = () => {
   });
   const [id, setId] = useState("0");
   const socialMedias = useSelector((state) => state.SocialMediaReducer);
-  // console.log(socialMedias);
+  const adminState = useSelector((state) => state.AdminReducer);
   return (
     <>
       <div className="bg-black-100 rounded-2xl">
@@ -33,8 +37,9 @@ const Contact = () => {
           <div className="flex flex-row flex-wrap justify-center gap-10 pb-10">
             {socialMedias.map((socialMedia, index) => (
               <ContactCard
-              setForm={setForm}
-              setId={setId}
+                adminState={adminState}
+                setForm={setForm}
+                setId={setId}
                 index={index}
                 key={`socialMedia-${index}`}
                 name={socialMedia.name}
@@ -45,16 +50,32 @@ const Contact = () => {
             ))}
           </div>
         ) : (
-          <CircularProgress />
+          <CircularProgress aria-label="Uploading progress: 50%" />
         )}
       </div>
-      <SocialMediaForm setId={setId} form={form} setForm={setForm} id={id} />
+      <SocialMediaForm
+        adminState={adminState}
+        setId={setId}
+        form={form}
+        setForm={setForm}
+        id={id}
+      />
     </>
   );
 };
 
-const ContactCard = ({ index, name, links, logo, _id, setForm, setId }) => {
-  const dispatch = useDispatch(); return (
+const ContactCard = ({
+  adminState,
+  index,
+  name,
+  links,
+  logo,
+  _id,
+  setForm,
+  setId,
+}) => {
+  const dispatch = useDispatch();
+  return (
     <Tilt className="xs:w-[110px] w-[110px] ">
       <motion.div variants={fadeIn("right", "spring", 0.25 * index, 0.55)}>
         <div className="w-full green-pink-gradient p-[1px] rounded-[30px] shadow-card ">
@@ -74,17 +95,18 @@ const ContactCard = ({ index, name, links, logo, _id, setForm, setId }) => {
             </div>
           </div>
         </div>
-        <div className="flex items-end flex-col justify-normal  xs:justify-end">
+        <div
+          className="flex items-end flex-col justify-normal  xs:justify-end"
+          style={{ display: adminState ? "block" : "none" }}
+        >
           <button
             onClick={() => {
               setId(_id);
-              setForm({ name:name,
-              logo: logo,
-              links: links, });
+              setForm({ name: name, logo: logo, links: links });
             }}
             className="bg-tertiary flex justify-end mt-2 py-3 px-5 rounded-xl outline-none w-fit text-white font-bold shadow-md shadow-slate-500"
           >
-            <img src={EditIcon} className="h-[20px]" alt="Edit Icon" />
+            <img src={EditIcon} className="h-[20px] w-[20px]" alt="Edit Icon" />
           </button>
           <button
             onClick={() => {
@@ -92,7 +114,11 @@ const ContactCard = ({ index, name, links, logo, _id, setForm, setId }) => {
             }}
             className="bg-tertiary flex justify-end mt-2 py-3 px-5 rounded-xl outline-none w-fit text-white font-bold shadow-md shadow-slate-500"
           >
-            <img className="h-[20px]" src={DeleteIcons}  alt="Delete Icon"/>
+            <img
+              className="h-[20px] w-[20px]"
+              src={DeleteIcons}
+              alt="Delete Icon"
+            />
           </button>
         </div>
       </motion.div>
@@ -100,7 +126,7 @@ const ContactCard = ({ index, name, links, logo, _id, setForm, setId }) => {
   );
 };
 
-const SocialMediaForm = ({setId, form, setForm, id }) => {
+const SocialMediaForm = ({ adminState, setId, form, setForm, id }) => {
   const dispatch = useDispatch();
   const formRef = useRef();
   const [loading, setLoading] = useState(false);
@@ -116,9 +142,9 @@ const SocialMediaForm = ({setId, form, setForm, id }) => {
     }
     setId("0");
     setForm({
-        title: "",
-        selectedImage: "",
-      })
+      title: "",
+      selectedImage: "",
+    });
 
     setLoading(false);
   };
@@ -126,6 +152,7 @@ const SocialMediaForm = ({setId, form, setForm, id }) => {
     <>
       <div
         className={`mt-12 flex md:w-[80%]  xl:flex-row flex-col gap-10 overflow-hidden`}
+        style={{ display: adminState ? "block" : "none" }}
       >
         <motion.div
           variants={slideIn("left", "tween", 0.2, 1)}

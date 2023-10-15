@@ -1,5 +1,6 @@
 import axios from "axios";
-const url = "http://localhost:5000/portfoilo";
+// const url = "http://localhost:5000/portfoilo";
+const url = "https://profoilo-backend.onrender.com/portfoilo";
 
 export const fetchBio = () => axios.get(`${url}/bio`);
 export const postBio = (newBio) => axios.post(`${url}/bio`, newBio);
